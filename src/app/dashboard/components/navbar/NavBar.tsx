@@ -25,7 +25,7 @@ const NavBar = () => {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography
             variant="body1"
-            sx={{ marginRight: "16px", color: "#fff" }}
+            sx={{ marginRight: "16px", color: "#929ECC" }}
           >
             {userName}
           </Typography>
