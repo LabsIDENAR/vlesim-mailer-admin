@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Drawer,
   List,
@@ -9,15 +10,10 @@ import {
   Collapse,
   styled,
 } from "@mui/material";
-import {
-  ExpandMore,
-  Email,
-  Assessment,
-  Settings,
-  Notifications,
-} from "@mui/icons-material";
+import { ExpandMore } from "@mui/icons-material";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { MenuItemProps } from "./interfaces";
+import { MenuItemData } from "./interfaces";
+import { menuItems } from "./data";
 
 const drawerWidth = "276px";
 
@@ -37,46 +33,16 @@ const NestedListItem = styled(ListItem)(({ theme }) => ({
   paddingLeft: theme.spacing(4),
 }));
 
-const menuItems: MenuItemProps[] = [
-  {
-    title: "Email Tools",
-    icon: <Email />,
-    subItems: [{ title: "Campaign", content: <div>Campaign Section</div> }],
-  },
-  {
-    title: "Reports",
-    icon: <Assessment />,
-    subItems: [
-      {
-        title: "Sending Overview",
-        content: <div>Sending Overview Section</div>,
-      },
-    ],
-  },
-  {
-    title: "Configuration",
-    icon: <Settings />,
-    subItems: [
-      { title: "Domain Manager", content: <div>Domain Manager Section</div> },
-    ],
-  },
-  {
-    title: "Notifications",
-    icon: <Notifications />,
-    subItems: [{ title: "Item X", content: <div>Item X Section</div> }],
-  },
-];
-
-const MenuItem: React.FC<MenuItemProps> = ({
-  title,
-  icon,
-  subItems,
-  onItemClick,
-}) => {
+const SidebarMenuItem: React.FC<MenuItemData> = ({ title, icon, subItems, path }) => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    setOpen(!open);
+    if (path) {
+      navigate(path);
+    } else {
+      setOpen(!open);
+    }
   };
 
   return (
@@ -93,7 +59,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
           <List component="div" disablePadding>
             {subItems.map((item, index) => (
               <NestedListItem key={index} disablePadding>
-                <ListItemButton onClick={() => onItemClick?.(item.content)}>
+                <ListItemButton onClick={() => navigate(item.path)}>
                   <ListItemText primary={item.title} />
                 </ListItemButton>
               </NestedListItem>
@@ -105,14 +71,12 @@ const MenuItem: React.FC<MenuItemProps> = ({
   );
 };
 
-const Sidebar: React.FC<{
-  onItemClick: (content: React.ReactNode) => void;
-}> = ({ onItemClick }) => {
+const Sidebar: React.FC = () => {
   return (
     <StyledDrawer variant="permanent" anchor="left">
       <List>
         {menuItems.map((item, index) => (
-          <MenuItem key={index} {...item} onItemClick={onItemClick} />
+          <SidebarMenuItem key={index} {...item} />
         ))}
       </List>
     </StyledDrawer>
