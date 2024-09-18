@@ -1,6 +1,11 @@
-export interface MenuItemProps {
+interface SubItem {
   title: string;
-  icon: React.ReactElement;
-  subItems?: { title: string; content: React.ReactNode }[];
-  onItemClick?: (content: React.ReactNode) => void;
+  path: string;
+}
+
+export interface MenuItemData {
+  title: string;
+  icon: React.ReactNode;
+  subItems?: SubItem[];
+  path?: string;
 }
