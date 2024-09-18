@@ -1,3 +1,4 @@
+import theme from "../theme/theme";
 import NavBar from "./components/navbar/NavBar";
 import Sidebar from "./components/sidebar/SideBar";
 import { Stack, SxProps } from "@mui/material";
@@ -19,8 +20,9 @@ export const Layout: React.FC<Props> = ({ children, fullHeight, sx }) => {
         gap: 2,
         borderRadius: "6px",
         overflowY: "auto",
-        display: "flex",  // Set the layout to flex
+        display: "flex", // Set the layout to flex
         ...sx,
+        bgcolor: theme.palette.primary.main,
       }}
       className={"pageLayout"}
     >

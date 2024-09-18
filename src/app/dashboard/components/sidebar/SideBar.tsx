@@ -23,7 +23,7 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
   "& .MuiDrawer-paper": {
     width: drawerWidth,
     boxSizing: "border-box",
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.primary.light,
     marginTop: "64px",
     paddingTop: "15px",
   },
@@ -33,7 +33,12 @@ const NestedListItem = styled(ListItem)(({ theme }) => ({
   paddingLeft: theme.spacing(4),
 }));
 
-const SidebarMenuItem: React.FC<MenuItemData> = ({ title, icon, subItems, path }) => {
+const SidebarMenuItem: React.FC<MenuItemData> = ({
+  title,
+  icon,
+  subItems,
+  path,
+}) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 

@@ -15,24 +15,21 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { Layout } from "../layout";
 import SearchIcon from "@mui/icons-material/Search";
-import { emailData } from "./data";
+import { Layout } from "../../layout";
+import { emailData } from "../../supressionList/data";
 
-export const SupressionList: React.FC = () => {
+export const DomainManagement: React.FC = () => {
   return (
     <Layout>
-      <Box sx={{ maxWidth: "1200px", margin: "0 auto" }}>
+      <Box sx={{ minWidth: "1500px", margin: "0 auto" }}>
         <CssBaseline />
         <Stack spacing={4}>
           <Stack spacing={2}>
-            <Typography variant="h1">Suppression List</Typography>
+            <Typography variant="h1">Domain Management</Typography>
             <Typography variant="body1">
-              Delivering email to invalid addresses or recipients that complain
-              hurts your sender reputation, which reduces your ability to
-              deliver email to the inbox. Our suppression list system
-              automatically blocks email to any known invalid email address or
-              any email address from which you have received a complaint.
+              Your sending domain defines how your recipients and inbox
+              providers know that you are you.
             </Typography>
           </Stack>
 
@@ -55,9 +52,14 @@ export const SupressionList: React.FC = () => {
               }}
               sx={{ width: "300px" }}
             />
-            <Button variant="contained" color="primary">
-              + Add entry
-            </Button>
+            <Stack sx={{ display: "flex", flexDirection: "row", gap: "15px" }}>
+              <Button variant="contained" color="primary">
+                Configure Details
+              </Button>
+              <Button variant="contained" color="primary">
+                + Add entry
+              </Button>
+            </Stack>
           </Stack>
 
           {/* Table for Suppression List */}
