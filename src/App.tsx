@@ -11,6 +11,8 @@ import { Login } from "./app/login/Login";
 import { Campaign } from "./app/dashboard/campaign/Campaign";
 import { SupressionList } from "./app/dashboard/supressionList/SupresionList";
 import { DomainManagement } from "./app/dashboard/configuration/domain-management/DomainManagement";
+import { WebHooks } from "./app/dashboard/configuration/event-webhooks/WebHooks";
+import { EditServer } from "./app/dashboard/configuration/edit-server/EditServer";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
@@ -30,8 +32,16 @@ const App: React.FC = () => {
             element={<DomainManagement />}
           />
           <Route
+            path="/dashboard/configuration/event-webhooks"
+            element={<WebHooks />}
+          />
+          <Route
             path="/dashboard/supressionList"
             element={<SupressionList />}
+          />
+          <Route
+            path="/dashboard/configuration/edit-server"
+            element={<EditServer />}
           />
         </Route>
         <Route path="*" element={<Navigate to="/login" replace />} />
