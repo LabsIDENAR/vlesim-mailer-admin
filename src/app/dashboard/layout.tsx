@@ -1,24 +1,42 @@
-import React, { useState } from "react";
+import theme from "../theme/theme";
 import NavBar from "./components/navbar/NavBar";
 import Sidebar from "./components/sidebar/SideBar";
-import { Stack } from "@mui/material";
+import { Stack, SxProps } from "@mui/material";
 
-const Layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
-  const [activeContent, setActiveContent] = useState<React.ReactNode>(children);
+type Props = {
+  children: JSX.Element | JSX.Element[] | null;
+  sx?: SxProps;
+  fullHeight?: boolean;
+};
 
-  const handleItemClick = (content: React.ReactNode) => {
-    setActiveContent(content);
-  };
-
+export const Layout: React.FC<Props> = ({ children, fullHeight, sx }) => {
   return (
-    <Stack className="layout">
+    <Stack
+      sx={{
+        width: "100%",
+        height: fullHeight ? "100%" : "auto",
+        px: 2,
+        py: 7,
+        gap: 2,
+        borderRadius: "6px",
+        overflowY: "auto",
+        display: "flex", // Set the layout to flex
+        ...sx,
+        bgcolor: theme.palette.primary.main,
+      }}
+      className={"pageLayout"}
+    >
       <NavBar />
-      <Stack className="main-content">
-        <Sidebar onItemClick={handleItemClick} />
-        <main>{activeContent}</main>
+      <Sidebar />
+      <Stack
+        sx={{
+          marginLeft: "276px", // Shifts content to the right, respecting sidebar width
+          width: "calc(100% - 276px)", // Uses the remaining space
+          alignItems: "center",
+        }}
+      >
+        {children}
       </Stack>
     </Stack>
   );
 };
-
-export default Layout;
