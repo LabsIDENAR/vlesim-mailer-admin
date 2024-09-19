@@ -22,7 +22,7 @@ import { emailData } from "../../supressionList/data";
 export const DomainManagement: React.FC = () => {
   return (
     <Layout>
-      <Box sx={{ minWidth: "1500px", margin: "0 auto" }}>
+      <Box sx={{ minWidth: "1600px", margin: "0 auto" }}>
         <CssBaseline />
         <Stack spacing={4}>
           <Stack spacing={2}>

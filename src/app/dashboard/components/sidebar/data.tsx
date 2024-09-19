@@ -41,8 +41,14 @@ export const menuItems: MenuItemData[] = [
         title: "Domain Manager",
         path: "/dashboard/configuration/domain-management",
       },
-      { title: "Event Webhooks", path: "/dashboard/config/event-webhooks" },
-      { title: "Server Settings", path: "/dashboard/config/server-settings" },
+      {
+        title: "Event Webhooks",
+        path: "/dashboard/configuration/event-webhooks",
+      },
+      {
+        title: "Server Settings",
+        path: "/dashboard/configuration/edit-server",
+      },
     ],
   },
   {

@@ -15,24 +15,24 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { Layout } from "../layout";
 import SearchIcon from "@mui/icons-material/Search";
-import { emailData } from "./data";
+import { Layout } from "../../layout";
+import { webhookslData } from "./data";
 
-export const SupressionList: React.FC = () => {
+export const WebHooks: React.FC = () => {
   return (
     <Layout>
-      <Box sx={{ maxWidth: "1600px", margin: "0 auto" }}>
+      <Box sx={{ minWidth: "1400px", margin: "0 auto" }}>
         <CssBaseline />
         <Stack spacing={4}>
           <Stack spacing={2}>
-            <Typography variant="h1">Suppression List</Typography>
+            <Typography variant="h1">Webhooks Overview</Typography>
             <Typography variant="body1">
-              Delivering email to invalid addresses or recipients that complain
-              hurts your sender reputation, which reduces your ability to
-              deliver email to the inbox. Our suppression list system
-              automatically blocks email to any known invalid email address or
-              any email address from which you have received a complaint.
+              Webhooks enable you to receive real-time notifications for every
+              email related event, such as: delivered messages, failed messages,
+              opens, clicks, and complaints. Create a webhook endpoint that can
+              receive and handle HTTPS POST requests to get started. Click Event
+              Webhook Documentation for additional information.
             </Typography>
           </Stack>
 
@@ -55,9 +55,11 @@ export const SupressionList: React.FC = () => {
               }}
               sx={{ width: "300px" }}
             />
-            <Button variant="contained" color="primary">
-              + Add entry
-            </Button>
+            <Stack>
+              <Button variant="contained" color="primary">
+                + Add entry
+              </Button>
+            </Stack>
           </Stack>
 
           {/* Table for Suppression List */}
@@ -69,15 +71,17 @@ export const SupressionList: React.FC = () => {
                   <TableCell>Status</TableCell>
                   <TableCell>Details</TableCell>
                   <TableCell>Last Update</TableCell>
+                  <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {emailData.map((email, index) => (
+                {webhookslData.map((email, index) => (
                   <TableRow key={index}>
-                    <TableCell>{email.address}</TableCell>
-                    <TableCell>{email.status}</TableCell>
-                    <TableCell>{email.details}</TableCell>
+                    <TableCell>{email.URL}</TableCell>
+                    <TableCell>{email.Events}</TableCell>
+                    <TableCell>{email.Date}</TableCell>
                     <TableCell>{email.lastUpdate}</TableCell>
+                    <TableCell>{email.Actions}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
