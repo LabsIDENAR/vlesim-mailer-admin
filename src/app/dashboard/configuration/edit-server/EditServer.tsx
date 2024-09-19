@@ -3,6 +3,7 @@ import { Box, CssBaseline, Stack, Typography } from "@mui/material";
 import { Layout } from "../../layout";
 import { ServerName } from "../components/ServerName";
 import { OverageSettings } from "../components/OverageSettings";
+import { NonDeliveryReports } from "../components/NonDeliveryReports";
 
 export const EditServer: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ export const EditServer: React.FC = () => {
           <Stack sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <ServerName />
             <OverageSettings />
+            <NonDeliveryReports />
           </Stack>
         </Stack>
       </Box>
