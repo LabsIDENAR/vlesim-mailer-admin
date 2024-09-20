@@ -1,12 +1,4 @@
-import {
-  Button,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -16,21 +8,17 @@ import DocumentUploadModal from "./ModalFiles";
 
 const FillCampaigns: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-  const [age, setAge] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subject, setSubject] = useState("");
   const [campaignName, setCampaignName] = useState("");
   const [body, setBody] = useState("");
   const [description, setDescription] = useState("");
+  const [attachDocuments, setAttachDocuments] = useState("");
   const [emailTo, setEmailTo] = useState("example@gmail.com"); // Ajusta esto según tu lógica
   console.log("🚀 ~ setEmailTo:", setEmailTo);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
-  };
 
   const handleAddCampaign = async () => {
     if (!selectedDate || !subject || !campaignName || !body || !description) {
@@ -49,13 +37,16 @@ const FillCampaigns: React.FC = () => {
     };
 
     try {
-      const response = await fetch("https://your-api-endpoint.com/campaigns", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const response = await fetch(
+        "http://vlesim-mailer-268611735.us-east-2.elb.amazonaws.com/campaign",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Something went wrong with the request.");
@@ -136,23 +127,6 @@ const FillCampaigns: React.FC = () => {
                 slotProps={{ textField: { variant: "outlined" } }}
               />
             </Stack>
-
-            <Stack sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography variant="subtitle1">Time</Typography>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={age}
-                label="Time"
-                placeholder="Select"
-                onChange={handleChange}
-                sx={{ width: 200 }}
-              >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
-            </Stack>
           </Stack>
         </Stack>
 
@@ -164,22 +138,15 @@ const FillCampaigns: React.FC = () => {
           }}
         >
           <Stack sx={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-            <Button variant="contained" color="primary">
-              Attach documents
-            </Button>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={age}
-              label="Age"
-              placeholder="Select"
-              onChange={handleChange}
-              sx={{ width: 200 }}
-            >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
+            <TextField
+              label="Enter your Description"
+              variant="outlined"
+              multiline
+              minRows={1}
+              sx={{ width: "350px" }}
+              value={attachDocuments}
+              onChange={(e) => setAttachDocuments(e.target.value)}
+            />
           </Stack>
           <Stack sx={{ display: "flex", flexDirection: "row", gap: "41px" }}>
             <Stack>
