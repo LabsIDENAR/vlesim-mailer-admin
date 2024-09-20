@@ -8,11 +8,11 @@ import {
 import { ProtectedRoute } from "./app/hooks/ProtectRoutes";
 import Dashboard from "./app/dashboard/App";
 import { Login } from "./app/login/Login";
-import { Campaign } from "./app/dashboard/campaign/Campaign";
 import { SupressionList } from "./app/dashboard/supressionList/SupresionList";
 import { DomainManagement } from "./app/dashboard/configuration/domain-management/DomainManagement";
 import { WebHooks } from "./app/dashboard/configuration/event-webhooks/WebHooks";
 import { EditServer } from "./app/dashboard/configuration/edit-server/EditServer";
+import Campaign from "./app/dashboard/campaign/Campaign";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
