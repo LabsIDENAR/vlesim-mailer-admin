@@ -19,7 +19,7 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-import { Edit, Delete } from "lucide-react";
+import { Edit, Delete, CirclePlay } from "lucide-react";
 import { Campaign } from "../interfaces";
 
 const CampaignHistory: React.FC = () => {
@@ -34,6 +34,7 @@ const CampaignHistory: React.FC = () => {
     null
   );
   const [editedCampaign, setEditedCampaign] = useState<Campaign | null>(null);
+  const endpoint = import.meta.env.VITE_APP_POST_AND_GET_CAMPAIGNS;
 
   useEffect(() => {
     fetchCampaigns();
@@ -42,15 +43,12 @@ const CampaignHistory: React.FC = () => {
   const fetchCampaigns = async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        "http://vlesim-mailer-268611735.us-east-2.elb.amazonaws.com/campaign",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(endpoint, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to fetch campaigns");
@@ -100,19 +98,22 @@ const CampaignHistory: React.FC = () => {
     setSelectedCampaign(null);
   };
 
+  const handleEditChange = (key: keyof Campaign, value: string | string[]) => {
+    if (editedCampaign) {
+      setEditedCampaign({ ...editedCampaign, [key]: value });
+    }
+  };
+
   const handleEditSubmit = async () => {
     if (editedCampaign && selectedCampaign) {
       try {
-        const response = await fetch(
-          `http://vlesim-mailer-268611735.us-east-2.elb.amazonaws.com/campaign/${selectedCampaign.id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(editedCampaign),
-          }
-        );
+        const response = await fetch(`${endpoint}/${selectedCampaign.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editedCampaign),
+        });
 
         if (!response.ok) {
           throw new Error("Failed to update campaign");
@@ -135,15 +136,12 @@ const CampaignHistory: React.FC = () => {
   const handleDeleteConfirm = async () => {
     if (selectedCampaign) {
       try {
-        const response = await fetch(
-          `http://vlesim-mailer-268611735.us-east-2.elb.amazonaws.com/campaign/${selectedCampaign.id}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${endpoint}/${selectedCampaign.id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Failed to delete campaign");
@@ -170,6 +168,32 @@ const CampaignHistory: React.FC = () => {
   if (campaigns.length === 0) {
     return <Typography>No campaigns found.</Typography>;
   }
+
+  const renderEditField = (key: keyof Campaign, value: string | string[]) => {
+    if (key === "to" && Array.isArray(value)) {
+      return (
+        <TextField
+          key={key}
+          fullWidth
+          margin="normal"
+          label={key}
+          value={value.join(", ")}
+          onChange={(e) => handleEditChange(key, e.target.value.split(", "))}
+          helperText="Separate multiple email addresses with commas"
+        />
+      );
+    }
+    return (
+      <TextField
+        key={key}
+        fullWidth
+        margin="normal"
+        label={key}
+        value={value as string}
+        onChange={(e) => handleEditChange(key, e.target.value)}
+      />
+    );
+  };
 
   return (
     <Stack sx={{ width: "100%", marginTop: "20px" }} spacing={3}>
@@ -225,10 +249,13 @@ const CampaignHistory: React.FC = () => {
                     ))}
                     <TableCell>
                       <IconButton onClick={() => handleEditClick(campaign)}>
-                        <Edit size={16} />
+                        <Edit size={20} />
                       </IconButton>
                       <IconButton onClick={() => handleDeleteClick(campaign)}>
-                        <Delete size={16} />
+                        <Delete size={20} />
+                      </IconButton>
+                      <IconButton onClick={() => handleDeleteClick(campaign)}>
+                        <CirclePlay size={20} />
                       </IconButton>
                     </TableCell>
                   </TableRow>
@@ -252,21 +279,9 @@ const CampaignHistory: React.FC = () => {
         <DialogTitle>Edit Campaign</DialogTitle>
         <DialogContent>
           {editedCampaign &&
-            Object.keys(editedCampaign).map((key) => (
-              <TextField
-                key={key}
-                fullWidth
-                margin="normal"
-                label={key}
-                value={editedCampaign[key]}
-                onChange={(e) =>
-                  setEditedCampaign({
-                    ...editedCampaign,
-                    [key]: e.target.value,
-                  })
-                }
-              />
-            ))}
+            Object.entries(editedCampaign).map(([key, value]) =>
+              renderEditField(key as keyof Campaign, value)
+            )}
         </DialogContent>
         <DialogActions>
           <Button sx={{ bgcolor: "red" }} onClick={handleEditDialogClose}>

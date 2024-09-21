@@ -21,6 +21,7 @@ const FillCampaigns: React.FC = () => {
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleAddCampaign = async () => {
+    const endpointPost = import.meta.env.VITE_APP_POST_AND_GET_CAMPAIGNS;
     if (!selectedDate || !subject || !campaignName || !body || !description) {
       alert("Please fill in all fields");
       return;
@@ -37,16 +38,13 @@ const FillCampaigns: React.FC = () => {
     };
 
     try {
-      const response = await fetch(
-        "http://vlesim-mailer-268611735.us-east-2.elb.amazonaws.com/campaign",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
+      const response = await fetch(endpointPost, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
 
       if (!response.ok) {
         throw new Error("Something went wrong with the request.");
@@ -68,7 +66,20 @@ const FillCampaigns: React.FC = () => {
             <TextField
               label="Enter your E-mail Subject"
               variant="outlined"
-              sx={{ width: "700px" }}
+              sx={{
+                width: {
+                  xs: "300px", // Para pantallas pequeñas
+                  md: "700px", // Para pantallas medianas y mayores
+                },
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#1DD63A", // Color del borde cuando está enfocado
+                  },
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+                },
+              }}
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
             />
@@ -78,7 +89,20 @@ const FillCampaigns: React.FC = () => {
             <TextField
               label="Enter Campaign Name"
               variant="outlined"
-              sx={{ width: "700px" }}
+              sx={{
+                width: {
+                  xs: "300px", // Para pantallas pequeñas
+                  md: "700px", // Para pantallas medianas y mayores
+                },
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#1DD63A", // Color del borde cuando está enfocado
+                  },
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+                },
+              }}
               value={campaignName}
               onChange={(e) => setCampaignName(e.target.value)}
             />
@@ -99,7 +123,20 @@ const FillCampaigns: React.FC = () => {
               variant="outlined"
               multiline
               minRows={10}
-              sx={{ width: "350px" }}
+              sx={{
+                width: {
+                  xs: "200px", // Para pantallas pequeñas
+                  md: "350px", // Para pantallas medianas y mayores
+                },
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#1DD63A", // Color del borde cuando está enfocado
+                  },
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+                },
+              }}
               value={body}
               onChange={(e) => setBody(e.target.value)}
             />
@@ -111,7 +148,20 @@ const FillCampaigns: React.FC = () => {
               variant="outlined"
               multiline
               minRows={10}
-              sx={{ width: "350px" }}
+              sx={{
+                width: {
+                  xs: "200px", // Para pantallas pequeñas
+                  md: "350px", // Para pantallas medianas y mayores
+                },
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#1DD63A", // Color del borde cuando está enfocado
+                  },
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+                },
+              }}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
@@ -125,6 +175,16 @@ const FillCampaigns: React.FC = () => {
                 value={selectedDate}
                 onChange={(newDate: Dayjs | null) => setSelectedDate(newDate)}
                 slotProps={{ textField: { variant: "outlined" } }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#1DD63A", // Color del borde cuando está enfocado
+                    },
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+                  },
+                }}
               />
             </Stack>
           </Stack>
@@ -143,7 +203,20 @@ const FillCampaigns: React.FC = () => {
               variant="outlined"
               multiline
               minRows={1}
-              sx={{ width: "350px" }}
+              sx={{
+                width: {
+                  xs: "300px", // Para pantallas pequeñas
+                  md: "700px", // Para pantallas medianas y mayores
+                },
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#1DD63A", // Color del borde cuando está enfocado
+                  },
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+                },
+              }}
               value={attachDocuments}
               onChange={(e) => setAttachDocuments(e.target.value)}
             />
