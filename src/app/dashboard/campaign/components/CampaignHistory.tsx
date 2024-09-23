@@ -18,11 +18,17 @@ import {
   DialogActions,
   Button,
   TextField,
+  Snackbar,
+  Alert,
 } from "@mui/material";
-import { Edit, Delete, CirclePlay } from "lucide-react";
+import { Edit, Delete } from "lucide-react";
 import { Campaign } from "../interfaces";
 
-const CampaignHistory: React.FC = () => {
+interface CampaignHistoryProps {
+  campaignsInfo: Campaign[];
+}
+
+const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -33,11 +39,21 @@ const CampaignHistory: React.FC = () => {
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(
     null
   );
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error";
+  }>({
+    open: false,
+    message: "",
+    severity: "success",
+  });
   const [editedCampaign, setEditedCampaign] = useState<Campaign | null>(null);
   const endpoint = import.meta.env.VITE_APP_POST_AND_GET_CAMPAIGNS;
 
   useEffect(() => {
     fetchCampaigns();
+    setCampaigns(campaignsInfo);
   }, []);
 
   const fetchCampaigns = async () => {
@@ -157,6 +173,42 @@ const CampaignHistory: React.FC = () => {
     }
   };
 
+  // const handleSendEmail = async () => {
+  //   if (selectedCampaign) {
+  //     try {
+  //       const response = await fetch(
+  //         `${endpoint}/${selectedCampaign.id}/launch`,
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //         }
+  //       );
+  //       if (!response.ok) {
+  //         throw new Error("Failed to send campaign");
+  //       }
+  //       console.log("🚀 ~ handleSendEmail ~ response:", response);
+  //       setSnackbar({
+  //         open: true,
+  //         message: "Campaign sent successfully",
+  //         severity: "success",
+  //       });
+  //     } catch (error) {
+  //       console.error("Error sending campaign:", error);
+  //       setSnackbar({
+  //         open: true,
+  //         message: "Failed to send campaign",
+  //         severity: "error",
+  //       });
+  //     }
+  //   }
+  // };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
   if (loading) {
     return <CircularProgress />;
   }
@@ -191,6 +243,16 @@ const CampaignHistory: React.FC = () => {
         label={key}
         value={value as string}
         onChange={(e) => handleEditChange(key, e.target.value)}
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            "&.Mui-focused fieldset": {
+              borderColor: "#1DD63A", // Color del borde cuando está enfocado
+            },
+          },
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+          },
+        }}
       />
     );
   };
@@ -254,9 +316,9 @@ const CampaignHistory: React.FC = () => {
                       <IconButton onClick={() => handleDeleteClick(campaign)}>
                         <Delete size={20} />
                       </IconButton>
-                      <IconButton onClick={() => handleDeleteClick(campaign)}>
+                      {/* <IconButton onClick={() => handleSendEmail(campaign)}>
                         <CirclePlay size={20} />
-                      </IconButton>
+                      </IconButton> */}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -305,11 +367,24 @@ const CampaignHistory: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteDialogClose}>Cancel</Button>
-          <Button onClick={handleDeleteConfirm} color="error">
+          <Button onClick={handleDeleteConfirm} sx={{ bgcolor: "red" }}>
             Delete
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Stack>
   );
 };

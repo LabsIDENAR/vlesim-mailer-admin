@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   CssBaseline,
@@ -11,10 +11,16 @@ import {
 import { Layout } from "../layout";
 import FillCampaigns from "./components/FillCampaings";
 import CampaignHistory from "./components/CampaignHistory";
+import { Campaign } from "./interfaces";
 
-const Campaign: React.FC = () => {
+const CampaignPage: React.FC = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [campaignsValue, setCampaignsValue] = useState<Campaign[]>([]);
+
+  const addCampaign = (newCampaign: Campaign) => {
+    setCampaignsValue((prevCampaigns) => [...prevCampaigns, newCampaign]);
+  };
 
   return (
     <Layout>
@@ -39,8 +45,8 @@ const Campaign: React.FC = () => {
               </Typography>
             </Stack>
             <Stack>
-              <FillCampaigns />
-              <CampaignHistory />
+              <FillCampaigns addCampaign={addCampaign} />
+              <CampaignHistory campaignsInfo={campaignsValue} />
             </Stack>
           </Stack>
         </Box>
@@ -49,4 +55,4 @@ const Campaign: React.FC = () => {
   );
 };
 
-export default Campaign;
+export default CampaignPage;

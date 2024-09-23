@@ -5,34 +5,26 @@ import {
   Box,
   IconButton,
   Badge,
-  Dialog,
-  DialogTitle,
-  DialogContent,
+  Popover,
   Stack,
-  DialogActions,
-  Button,
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useState } from "react";
 
-interface NavBarProps {
-  openDialog: () => void;
-  closeDialog: () => void;
-}
+const NavBar = () => {
+  const userName = "juan@mail.com";
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-const NavBar: React.FC<NavBarProps> = ({ openDialog, closeDialog }) => {
-  const userName = "User Name";
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const handleOpen = () => {
-    setIsDialogOpen(true);
-    openDialog();
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget); // Guarda el elemento donde se hizo clic
   };
 
   const handleClose = () => {
-    setIsDialogOpen(false);
-    closeDialog();
+    setAnchorEl(null); // Cierra el popover
   };
+
+  const open = Boolean(anchorEl); // Abre el popover si hay un elemento anclado
+  const id = open ? "notification-popover" : undefined;
 
   return (
     <AppBar position="fixed" sx={{ backgroundColor: "#24244A", color: "#000" }}>
@@ -52,29 +44,37 @@ const NavBar: React.FC<NavBarProps> = ({ openDialog, closeDialog }) => {
           >
             {userName}
           </Typography>
-          <IconButton edge="end" onClick={handleOpen}>
+          <IconButton edge="end" onClick={handleClick}>
             <Badge badgeContent={6} color="error">
               <NotificationsIcon sx={{ color: "#ffd733" }} />
             </Badge>
           </IconButton>
         </Box>
       </Toolbar>
-      <Dialog open={isDialogOpen} onClose={handleClose}>
-        <DialogTitle>Edit Campaign</DialogTitle>
-        <DialogContent>
-          <Stack>
-            <Typography>Notificacion 1</Typography>
-            <Typography>Notificacion 1</Typography>
-            <Typography>Notificacion 1</Typography>
-            <Typography>Notificacion 1</Typography>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+        <Box sx={{ padding: 2, minWidth: 200 }}>
+          <Typography variant="h6">Notifications</Typography>
+          <Stack spacing={1}>
+            <Typography>Notifications 1</Typography>
+            <Typography>Notifications 2</Typography>
+            <Typography>Notifications 3</Typography>
+            <Typography>Notifications 4</Typography>
           </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button sx={{ bgcolor: "red" }} onClick={handleClose}>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </Box>
+      </Popover>
     </AppBar>
   );
 };

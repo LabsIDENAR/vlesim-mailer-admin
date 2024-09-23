@@ -5,8 +5,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
 import { Dayjs } from "dayjs";
 import DocumentUploadModal from "./ModalFiles";
+import { Campaign } from "../interfaces";
 
-const FillCampaigns: React.FC = () => {
+interface FillCampaignsProps {
+  addCampaign: (campaign: Campaign) => void;
+}
+
+const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subject, setSubject] = useState("");
@@ -14,7 +19,7 @@ const FillCampaigns: React.FC = () => {
   const [body, setBody] = useState("");
   const [description, setDescription] = useState("");
   const [attachDocuments, setAttachDocuments] = useState("");
-  const [emailTo, setEmailTo] = useState("example@gmail.com"); // Ajusta esto según tu lógica
+  const [emailTo, setEmailTo] = useState("cardonaospinajuanesteban@gmail.com");
   console.log("🚀 ~ setEmailTo:", setEmailTo);
 
   const handleOpenModal = () => setIsModalOpen(true);
@@ -27,7 +32,7 @@ const FillCampaigns: React.FC = () => {
       return;
     }
 
-    const requestBody = {
+    const newCampaign = {
       name: campaignName,
       date: selectedDate.toISOString(),
       description: description,
@@ -43,7 +48,7 @@ const FillCampaigns: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify(newCampaign),
       });
 
       if (!response.ok) {
@@ -52,6 +57,17 @@ const FillCampaigns: React.FC = () => {
 
       const data = await response.json();
       console.log("Campaign created successfully:", data);
+
+      // Add the new campaign using the prop function
+      addCampaign(data);
+
+      // Clear the form fields
+      setSelectedDate(null);
+      setSubject("");
+      setCampaignName("");
+      setBody("");
+      setDescription("");
+      setAttachDocuments("");
     } catch (error) {
       console.error("Error creating campaign:", error);
     }
