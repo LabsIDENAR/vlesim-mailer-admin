@@ -18,9 +18,7 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
   const [campaignName, setCampaignName] = useState("");
   const [body, setBody] = useState("");
   const [description, setDescription] = useState("");
-  const [attachDocuments, setAttachDocuments] = useState("");
-  const [emailTo, setEmailTo] = useState("cardonaospinajuanesteban@gmail.com");
-  console.log("🚀 ~ setEmailTo:", setEmailTo);
+  const [emailsList, setEmailsList] = useState<string[]>([]); // Declare the state for emails
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -38,9 +36,10 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
       description: description,
       subject: subject,
       body: body,
-      to: [emailTo],
+      to: emailsList,
       attachments: [],
     };
+    console.log("🚀 ~ handleAddCampaign ~ newCampaign:", newCampaign);
 
     try {
       const response = await fetch(endpointPost, {
@@ -58,16 +57,7 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
       const data = await response.json();
       console.log("Campaign created successfully:", data);
 
-      // Add the new campaign using the prop function
       addCampaign(data);
-
-      // Clear the form fields
-      setSelectedDate(null);
-      setSubject("");
-      setCampaignName("");
-      setBody("");
-      setDescription("");
-      setAttachDocuments("");
     } catch (error) {
       console.error("Error creating campaign:", error);
     }
@@ -213,30 +203,6 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
             flexDirection: "row",
           }}
         >
-          <Stack sx={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-            <TextField
-              label="Enter your Description"
-              variant="outlined"
-              multiline
-              minRows={1}
-              sx={{
-                width: {
-                  xs: "300px", // Para pantallas pequeñas
-                  md: "700px", // Para pantallas medianas y mayores
-                },
-                "& .MuiOutlinedInput-root": {
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#1DD63A", // Color del borde cuando está enfocado
-                  },
-                },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#1DD63A", // Color de la etiqueta cuando está enfocada
-                },
-              }}
-              value={attachDocuments}
-              onChange={(e) => setAttachDocuments(e.target.value)}
-            />
-          </Stack>
           <Stack sx={{ display: "flex", flexDirection: "row", gap: "41px" }}>
             <Stack>
               <Button
@@ -254,6 +220,7 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
             <DocumentUploadModal
               open={isModalOpen}
               onClose={handleCloseModal}
+              setEmailsList={setEmailsList}
             />
             <Stack>
               <Button

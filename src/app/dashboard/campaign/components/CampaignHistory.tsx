@@ -21,7 +21,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { Edit, Delete } from "lucide-react";
+import { Edit, Delete, CirclePlay } from "lucide-react";
 import { Campaign } from "../interfaces";
 
 interface CampaignHistoryProps {
@@ -81,7 +81,7 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
     }
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
@@ -134,8 +134,6 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
         if (!response.ok) {
           throw new Error("Failed to update campaign");
         }
-
-        // Update the local state
         setCampaigns(
           campaigns.map((c) =>
             c.id === selectedCampaign.id ? editedCampaign : c
@@ -173,39 +171,66 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
     }
   };
 
-  // const handleSendEmail = async () => {
-  //   if (selectedCampaign) {
-  //     try {
-  //       const response = await fetch(
-  //         `${endpoint}/${selectedCampaign.id}/launch`,
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //         }
-  //       );
-  //       if (!response.ok) {
-  //         throw new Error("Failed to send campaign");
-  //       }
-  //       console.log("🚀 ~ handleSendEmail ~ response:", response);
-  //       setSnackbar({
-  //         open: true,
-  //         message: "Campaign sent successfully",
-  //         severity: "success",
-  //       });
-  //     } catch (error) {
-  //       console.error("Error sending campaign:", error);
-  //       setSnackbar({
-  //         open: true,
-  //         message: "Failed to send campaign",
-  //         severity: "error",
-  //       });
-  //     }
-  //   }
-  // };
+  const handleSendEmail = async () => {
+    console.log("handleSendEmail called"); // Debug log
+    console.log("Selected campaign:", selectedCampaign); // Debug log
+    console.log("Endpoint:", endpoint); // Debug log
 
-  const handleCloseSnackbar = () => {
+    if (selectedCampaign) {
+      try {
+        console.log(
+          `Attempting to send campaign with ID: ${selectedCampaign.id}`
+        ); // Debug log
+        const response = await fetch(
+          `${endpoint}/${selectedCampaign.id}/launch`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("Response status:", response.status); // Debug log
+        if (!response.ok) {
+          throw new Error(
+            `Failed to send campaign: ${response.status} ${response.statusText}`
+          );
+        }
+        const responseData = await response.json();
+        console.log("Response data:", responseData); // Debug log
+
+        setSnackbar({
+          open: true,
+          message: "Campaign sent successfully",
+          severity: "success",
+        });
+      } catch (error) {
+        console.error("Error sending campaign:", error);
+        setSnackbar({
+          open: true,
+          message: `Failed to send campaign: ${
+            error instanceof Error ? error.message : "Unknown error"
+          }`,
+          severity: "error",
+        });
+      }
+    } else {
+      console.error("No campaign selected"); // Debug log
+      setSnackbar({
+        open: true,
+        message: "No campaign selected",
+        severity: "error",
+      });
+    }
+  };
+
+  const handleCloseSnackbar = (
+    _event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
     setSnackbar({ ...snackbar, open: false });
   };
 
@@ -316,9 +341,18 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
                       <IconButton onClick={() => handleDeleteClick(campaign)}>
                         <Delete size={20} />
                       </IconButton>
-                      {/* <IconButton onClick={() => handleSendEmail(campaign)}>
+                      <IconButton
+                        onClick={() => {
+                          console.log(
+                            "Send email button clicked for campaign:",
+                            campaign
+                          ); // Debug log
+                          setSelectedCampaign(campaign);
+                          handleSendEmail();
+                        }}
+                      >
                         <CirclePlay size={20} />
-                      </IconButton> */}
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}

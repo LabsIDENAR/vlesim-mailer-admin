@@ -17,10 +17,12 @@ import {
   CloudUpload as CloudUploadIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
+import Papa from "papaparse";
 
 interface DocumentUploadModalProps {
   open: boolean;
   onClose: () => void;
+  setEmailsList: React.Dispatch<React.SetStateAction<string[]>>; // <-- Add this line
 }
 
 const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
@@ -29,6 +31,7 @@ const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+  const [emailsList, setEmailsList] = useState<string[]>([]);
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -40,6 +43,18 @@ const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
     if (event.target.files) {
       const selectedFiles = Array.from(event.target.files);
       setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+
+      // Procesar el archivo CSV
+      const file = selectedFiles[0];
+      if (file && file.type === "text/csv") {
+        Papa.parse(file, {
+          complete: (results) => {
+            const emails = (results.data as string[][]).map((row) => row[0]);
+            setEmailsList(emails.filter((email) => email.includes("@")));
+          },
+          header: false,
+        });
+      }
     }
   };
 
@@ -48,8 +63,10 @@ const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   };
 
   const handleSave = () => {
-    // Implement save functionality here
-    console.log("Files to save:", files);
+    if (emailsList.length > 0) {
+      console.log("Emails to use:", emailsList.join(", "));
+      setEmailsList(emailsList);
+    }
     onClose();
   };
 
