@@ -17,20 +17,13 @@ export const menuItems: MenuItemData[] = [
     icon: <Assessment />,
     subItems: [
       {
-        title: "Sending Overview",
+        title: "Reports by campaign",
         path: "/dashboard/reports/sending-overview",
       },
       {
-        title: "Delivered Messages",
+        title: "Total report",
         path: "/dashboard/reports/delivered-messages",
       },
-      { title: "Failed Messages", path: "/dashboard/reports/failed-messages" },
-      { title: "Complaints", path: "/dashboard/reports/complaints" },
-      {
-        title: "Engagement Tracking",
-        path: "/dashboard/reports/engagement-tracking",
-      },
-      { title: "Current Usage", path: "/dashboard/reports/current-usage" },
     ],
   },
   {

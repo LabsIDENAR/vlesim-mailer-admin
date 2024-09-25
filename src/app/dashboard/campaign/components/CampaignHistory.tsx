@@ -32,6 +32,7 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  console.log("🚀 ~ campaigns:", campaigns);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -53,8 +54,7 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
 
   useEffect(() => {
     fetchCampaigns();
-    setCampaigns(campaignsInfo);
-  }, []);
+  }, [campaignsInfo]);
 
   const fetchCampaigns = async () => {
     try {
@@ -71,8 +71,7 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
       }
 
       const data = await response.json();
-      console.log("API response:", data.data);
-      setCampaigns(data.data);
+      setCampaigns([...data.data]);
     } catch (error) {
       console.error("Error fetching campaigns:", error);
       setError("Failed to load campaigns. Please try again later.");
@@ -172,15 +171,8 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
   };
 
   const handleSendEmail = async () => {
-    console.log("handleSendEmail called"); // Debug log
-    console.log("Selected campaign:", selectedCampaign); // Debug log
-    console.log("Endpoint:", endpoint); // Debug log
-
     if (selectedCampaign) {
       try {
-        console.log(
-          `Attempting to send campaign with ID: ${selectedCampaign.id}`
-        ); // Debug log
         const response = await fetch(
           `${endpoint}/${selectedCampaign.id}/launch`,
           {
@@ -190,14 +182,14 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
             },
           }
         );
-        console.log("Response status:", response.status); // Debug log
+        console.log("Response status:", response.status);
         if (!response.ok) {
           throw new Error(
             `Failed to send campaign: ${response.status} ${response.statusText}`
           );
         }
         const responseData = await response.json();
-        console.log("Response data:", responseData); // Debug log
+        console.log("Response data:", responseData);
 
         setSnackbar({
           open: true,
@@ -215,12 +207,12 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
         });
       }
     } else {
-      console.error("No campaign selected"); // Debug log
-      setSnackbar({
-        open: true,
-        message: "No campaign selected",
-        severity: "error",
-      });
+      console.error("No campaign selected");
+      // setSnackbar({
+      //   open: true,
+      //   message: "No campaign selected",
+      //   severity: "error",
+      // });
     }
   };
 

@@ -28,10 +28,11 @@ interface DocumentUploadModalProps {
 const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   open,
   onClose,
+  setEmailsList,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [files, setFiles] = useState<File[]>([]);
-  const [emailsList, setEmailsList] = useState<string[]>([]);
+  const [emailsList, setEmailsListRead] = useState<string[]>([]);
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -50,7 +51,7 @@ const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
         Papa.parse(file, {
           complete: (results) => {
             const emails = (results.data as string[][]).map((row) => row[0]);
-            setEmailsList(emails.filter((email) => email.includes("@")));
+            setEmailsListRead(emails.filter((email) => email.includes("@")));
           },
           header: false,
         });
@@ -65,6 +66,7 @@ const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   const handleSave = () => {
     if (emailsList.length > 0) {
       console.log("Emails to use:", emailsList.join(", "));
+      setEmailsListRead(emailsList);
       setEmailsList(emailsList);
     }
     onClose();

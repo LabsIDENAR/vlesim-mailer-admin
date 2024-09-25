@@ -18,7 +18,8 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
   const [campaignName, setCampaignName] = useState("");
   const [body, setBody] = useState("");
   const [description, setDescription] = useState("");
-  const [emailsList, setEmailsList] = useState<string[]>([]); // Declare the state for emails
+  const [emailsList, setEmailsList] = useState<string[]>([]);
+  console.log("🚀 ~ emailsList:", emailsList);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -39,7 +40,6 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
       to: emailsList,
       attachments: [],
     };
-    console.log("🚀 ~ handleAddCampaign ~ newCampaign:", newCampaign);
 
     try {
       const response = await fetch(endpointPost, {
@@ -57,7 +57,7 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
       const data = await response.json();
       console.log("Campaign created successfully:", data);
 
-      addCampaign(data);
+      addCampaign(data.data);
     } catch (error) {
       console.error("Error creating campaign:", error);
     }

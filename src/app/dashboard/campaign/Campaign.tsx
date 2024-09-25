@@ -17,8 +17,10 @@ const CampaignPage: React.FC = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [campaignsValue, setCampaignsValue] = useState<Campaign[]>([]);
+  console.log("🚀 ~ campaignsValue:", campaignsValue);
 
   const addCampaign = (newCampaign: Campaign) => {
+    console.log("🚀 ~ addCampaign ~ newCampaign:", newCampaign);
     setCampaignsValue((prevCampaigns) => [...prevCampaigns, newCampaign]);
   };
 
