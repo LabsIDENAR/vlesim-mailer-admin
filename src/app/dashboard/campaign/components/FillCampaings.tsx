@@ -19,7 +19,7 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
   const [body, setBody] = useState("");
   const [description, setDescription] = useState("");
   const [emailsList, setEmailsList] = useState<string[]>([]);
-  console.log("🚀 ~ emailsList:", emailsList);
+  const token = localStorage.getItem("authToken");
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -46,9 +46,11 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify(newCampaign),
       });
+      console.log("🚀 ~ handleAddCampaign ~ response:", response);
 
       if (!response.ok) {
         throw new Error("Something went wrong with the request.");
@@ -74,16 +76,16 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
               variant="outlined"
               sx={{
                 width: {
-                  xs: "300px", // Para pantallas pequeñas
-                  md: "700px", // Para pantallas medianas y mayores
+                  xs: "300px",
+                  md: "700px",
                 },
                 "& .MuiOutlinedInput-root": {
                   "&.Mui-focused fieldset": {
-                    borderColor: "#1DD63A", // Color del borde cuando está enfocado
+                    borderColor: "#1DD63A",
                   },
                 },
                 "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+                  color: "#1DD63A",
                 },
               }}
               value={subject}
@@ -97,16 +99,16 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
               variant="outlined"
               sx={{
                 width: {
-                  xs: "300px", // Para pantallas pequeñas
-                  md: "700px", // Para pantallas medianas y mayores
+                  xs: "300px",
+                  md: "700px",
                 },
                 "& .MuiOutlinedInput-root": {
                   "&.Mui-focused fieldset": {
-                    borderColor: "#1DD63A", // Color del borde cuando está enfocado
+                    borderColor: "#1DD63A",
                   },
                 },
                 "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+                  color: "#1DD63A",
                 },
               }}
               value={campaignName}
@@ -131,16 +133,16 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
               minRows={10}
               sx={{
                 width: {
-                  xs: "200px", // Para pantallas pequeñas
-                  md: "350px", // Para pantallas medianas y mayores
+                  xs: "200px",
+                  md: "350px",
                 },
                 "& .MuiOutlinedInput-root": {
                   "&.Mui-focused fieldset": {
-                    borderColor: "#1DD63A", // Color del borde cuando está enfocado
+                    borderColor: "#1DD63A",
                   },
                 },
                 "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+                  color: "#1DD63A",
                 },
               }}
               value={body}
@@ -156,21 +158,47 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
               minRows={10}
               sx={{
                 width: {
-                  xs: "200px", // Para pantallas pequeñas
-                  md: "350px", // Para pantallas medianas y mayores
+                  xs: "200px",
+                  md: "350px",
                 },
                 "& .MuiOutlinedInput-root": {
                   "&.Mui-focused fieldset": {
-                    borderColor: "#1DD63A", // Color del borde cuando está enfocado
+                    borderColor: "#1DD63A",
                   },
                 },
                 "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+                  color: "#1DD63A",
                 },
               }}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
+          </Stack>
+          <Stack
+            spacing={1}
+            sx={{ bgcolor: "#F6F6F6", minWidth: "300px", padding: "10px" }}
+          >
+            <Typography variant="subtitle1">E-mails</Typography>
+            <Stack
+              spacing={1}
+              sx={{
+                maxHeight: "200px",
+                overflowY: "auto",
+                paddingRight: "8px",
+              }}
+            >
+              {emailsList.length > 0 ? (
+                emailsList.map((email, index) => (
+                  <Typography key={index} variant="body1">
+                    {email}
+                  </Typography>
+                ))
+              ) : (
+                <Typography variant="body2" color="textSecondary">
+                  No e-mails added yet.
+                </Typography>
+              )}
+            </Stack>
           </Stack>
 
           <Stack sx={{ display: "flex", flexDirection: "row", gap: "10px" }}>
@@ -184,11 +212,11 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     "&.Mui-focused fieldset": {
-                      borderColor: "#1DD63A", // Color del borde cuando está enfocado
+                      borderColor: "#1DD63A",
                     },
                   },
                   "& .MuiInputLabel-root.Mui-focused": {
-                    color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+                    color: "#1DD63A",
                   },
                 }}
               />

@@ -13,6 +13,9 @@ import { DomainManagement } from "./app/dashboard/configuration/domain-managemen
 import { WebHooks } from "./app/dashboard/configuration/event-webhooks/WebHooks";
 import { EditServer } from "./app/dashboard/configuration/edit-server/EditServer";
 import Campaign from "./app/dashboard/campaign/Campaign";
+import { ReportsByCampaign } from "./app/dashboard/reports/reports-by-campaign/ReportsByCampaign";
+import { TotalReports } from "./app/dashboard/reports/total-reports/TotalReports";
+import { Unsubscribe } from "./app/unsubscribe/Unsuscribe";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
@@ -24,6 +27,7 @@ const App: React.FC = () => {
           path="/login"
           element={<Login setIsAuthenticated={setIsAuthenticated} />}
         />
+        <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/campaign" element={<Campaign />} />
@@ -42,6 +46,14 @@ const App: React.FC = () => {
           <Route
             path="/dashboard/configuration/edit-server"
             element={<EditServer />}
+          />
+          <Route
+            path="/dashboard/reports/reports-by-campaign"
+            element={<ReportsByCampaign />}
+          />
+          <Route
+            path="/dashboard/reports/total-reports"
+            element={<TotalReports />}
           />
         </Route>
         <Route path="*" element={<Navigate to="/login" replace />} />

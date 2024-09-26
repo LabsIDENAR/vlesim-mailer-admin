@@ -3,6 +3,7 @@ import {
   Assessment,
   Settings,
   Notifications,
+  ChecklistRtl,
 } from "@mui/icons-material";
 import { MenuItemData } from "./interfaces";
 
@@ -18,11 +19,11 @@ export const menuItems: MenuItemData[] = [
     subItems: [
       {
         title: "Reports by campaign",
-        path: "/dashboard/reports/sending-overview",
+        path: "/dashboard/reports/reports-by-campaign",
       },
       {
         title: "Total report",
-        path: "/dashboard/reports/delivered-messages",
+        path: "/dashboard/reports/total-reports",
       },
     ],
   },
@@ -46,7 +47,7 @@ export const menuItems: MenuItemData[] = [
   },
   {
     title: "Suppression List",
-    icon: <Settings />,
+    icon: <ChecklistRtl />,
     path: "/dashboard/supressionList",
   },
   {

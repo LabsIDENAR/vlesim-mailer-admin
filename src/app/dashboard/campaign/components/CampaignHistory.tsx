@@ -32,7 +32,6 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  console.log("🚀 ~ campaigns:", campaigns);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -51,6 +50,7 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
   });
   const [editedCampaign, setEditedCampaign] = useState<Campaign | null>(null);
   const endpoint = import.meta.env.VITE_APP_POST_AND_GET_CAMPAIGNS;
+  const token = localStorage.getItem("authToken");
 
   useEffect(() => {
     fetchCampaigns();
@@ -63,6 +63,7 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
       });
 
@@ -126,6 +127,7 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
           },
           body: JSON.stringify(editedCampaign),
         });
@@ -153,6 +155,7 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
           },
         });
 
@@ -179,10 +182,10 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              ...(token && { Authorization: `Bearer ${token}` }),
             },
           }
         );
-        console.log("Response status:", response.status);
         if (!response.ok) {
           throw new Error(
             `Failed to send campaign: ${response.status} ${response.statusText}`
