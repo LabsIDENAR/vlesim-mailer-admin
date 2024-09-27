@@ -24,17 +24,36 @@ export const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const loginEmail = import.meta.env.VITE_APP_LOGIN_EMAIL;
-    const loginPassword = import.meta.env.VITE_APP_LOGIN_PASSWORD;
+    try {
+      const response = await fetch(import.meta.env.VITE_APP_POST_LOGIN, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: email,
+          password: password,
+        }),
+      });
 
-    if (email === loginEmail && password === loginPassword) {
-      setIsAuthenticated(true);
-      navigate("/dashboard");
-    } else {
-      setError("Invalid email or password");
+      if (response.ok) {
+        const data = await response.json();
+        const token = data.data.accessToken;
+
+        // Guardar el token en localStorage
+        localStorage.setItem("authToken", token);
+
+        setIsAuthenticated(true);
+        navigate("/dashboard");
+      } else {
+        setError("Invalid email or password");
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      setError("An error occurred. Please try again later.");
     }
   };
 
@@ -107,7 +126,7 @@ export const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
                     type="submit"
                     fullWidth
                     variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
+                    sx={{ mt: 3, mb: 2, bgcolor: "#24244A" }}
                   >
                     Sign In
                   </Button>
