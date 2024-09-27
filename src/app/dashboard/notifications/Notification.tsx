@@ -14,7 +14,8 @@ function Notification() {
 
   const {data, isLoading, errorMessage} = useFetch<FetchResponseNotification>({
     method: "GET",
-    path: url
+    path: url,
+    timePolling: 5000
   })
 
   return (

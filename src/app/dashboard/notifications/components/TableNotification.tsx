@@ -23,9 +23,10 @@ export function TableNotification({notifications}: TableProps) {
           {
             notifications.map((row) => (
               <TableRow key={row.id}>
-                <TableCell>{row.campaignId}</TableCell>
+                <TableCell>{row.campaign.name}</TableCell>
                 <TableCell>{row.message}</TableCell>
                 <TableCell>{row.type}</TableCell>
+                <TableCell>{row.updatedAt.split("T")[0]}</TableCell>
               </TableRow>
             ))
           }

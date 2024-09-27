@@ -9,5 +9,8 @@ export const columnsTable: Column[] = [
   },
   {
     value: 'Type'
+  },
+  {
+    value: 'Date'
   }
 ]
