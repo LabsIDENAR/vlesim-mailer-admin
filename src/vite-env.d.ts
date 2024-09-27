@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly VITE_APP_POST_AND_GET_CAMPAIGNS: string;
   readonly VITE_APP_POST_UNSUSCRIBE_USERS: string;
   readonly VITE_APP_POST_LOGIN: string;
+  readonly VITE_APP_GET_SUPRESSION_LIST: string;
 }
 
 interface ImportMeta {

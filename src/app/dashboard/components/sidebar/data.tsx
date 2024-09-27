@@ -1,7 +1,7 @@
 import {
   Email,
   Assessment,
-  Settings,
+  // Settings,
   Notifications,
   ChecklistRtl,
 } from "@mui/icons-material";
@@ -27,24 +27,24 @@ export const menuItems: MenuItemData[] = [
       },
     ],
   },
-  {
-    title: "Configuration",
-    icon: <Settings />,
-    subItems: [
-      {
-        title: "Domain Manager",
-        path: "/dashboard/configuration/domain-management",
-      },
-      {
-        title: "Event Webhooks",
-        path: "/dashboard/configuration/event-webhooks",
-      },
-      {
-        title: "Server Settings",
-        path: "/dashboard/configuration/edit-server",
-      },
-    ],
-  },
+  // {
+  //   title: "Configuration",
+  //   icon: <Settings />,
+  //   subItems: [
+  //     {
+  //       title: "Domain Manager",
+  //       path: "/dashboard/configuration/domain-management",
+  //     },
+  //     {
+  //       title: "Event Webhooks",
+  //       path: "/dashboard/configuration/event-webhooks",
+  //     },
+  //     {
+  //       title: "Server Settings",
+  //       path: "/dashboard/configuration/edit-server",
+  //     },
+  //   ],
+  // },
   {
     title: "Suppression List",
     icon: <ChecklistRtl />,

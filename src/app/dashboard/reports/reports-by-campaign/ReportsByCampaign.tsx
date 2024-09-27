@@ -1,6 +1,7 @@
 import { Layout } from "../../layout";
 import { Box, CssBaseline, Stack, Typography } from "@mui/material";
 import { SelectCampaignsReports } from "./components/SelectCampaignsReports";
+import { EmailsData } from "./components/EmailsData";
 
 export const ReportsByCampaign = () => {
   return (
@@ -13,6 +14,7 @@ export const ReportsByCampaign = () => {
           </Stack>
           <Stack>
             <SelectCampaignsReports />
+            <EmailsData />
           </Stack>
         </Stack>
       </Box>

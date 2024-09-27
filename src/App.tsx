@@ -8,7 +8,6 @@ import {
 import { ProtectedRoute } from "./app/hooks/ProtectRoutes";
 import Dashboard from "./app/dashboard/App";
 import { Login } from "./app/login/Login";
-import { SupressionList } from "./app/dashboard/supressionList/SupresionList";
 import { DomainManagement } from "./app/dashboard/configuration/domain-management/DomainManagement";
 import { WebHooks } from "./app/dashboard/configuration/event-webhooks/WebHooks";
 import { EditServer } from "./app/dashboard/configuration/edit-server/EditServer";
@@ -16,6 +15,7 @@ import Campaign from "./app/dashboard/campaign/Campaign";
 import { ReportsByCampaign } from "./app/dashboard/reports/reports-by-campaign/ReportsByCampaign";
 import { TotalReports } from "./app/dashboard/reports/total-reports/TotalReports";
 import { Unsubscribe } from "./app/unsubscribe/Unsuscribe";
+import { SuppressionList } from "./app/dashboard/supressionList/SupressionList";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
@@ -41,7 +41,7 @@ const App: React.FC = () => {
           />
           <Route
             path="/dashboard/supressionList"
-            element={<SupressionList />}
+            element={<SuppressionList />}
           />
           <Route
             path="/dashboard/configuration/edit-server"
