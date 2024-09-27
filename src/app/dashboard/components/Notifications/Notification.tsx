@@ -3,12 +3,13 @@ import {Stack, Typography} from "@mui/material";
 import {colors, icons} from "./Styles.tsx";
 import {useNavigate} from "react-router-dom";
 import {patchAlert} from "../../../methods/patchAlert.ts";
+import {timeAgo} from "../../../methods/timeAgo.ts";
 
 interface NotificationProps extends NotificationInterface {
   handleCloseNotifications: () => void;
 }
 
-export function Notification({message, type, campaign, handleCloseNotifications, id}: NotificationProps) {
+export function Notification({message, type, campaign, handleCloseNotifications, id, updatedAt}: NotificationProps) {
   const handleClick = async () => {
     await patchAlert(id)
     handleCloseNotifications()
@@ -27,7 +28,7 @@ export function Notification({message, type, campaign, handleCloseNotifications,
           <Typography fontSize={'11px'} fontWeight={400}>{campaign.name}</Typography>
         </Stack>
         <Stack height={'100%'} flex={1}>
-          <Typography fontSize={'11px'} fontWeight={400}>1h ago</Typography>
+          <Typography fontSize={'11px'} fontWeight={400}>{timeAgo(updatedAt)}</Typography>
         </Stack>
       </Stack>
     </div>
