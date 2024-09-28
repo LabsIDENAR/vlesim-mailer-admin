@@ -3,7 +3,10 @@
 interface ImportMetaEnv {
   readonly VITE_APP_LOGIN_EMAIL: string;
   readonly VITE_APP_LOGIN_PASSWORD: string;
-  // Add other environment variables as needed
+  readonly VITE_APP_POST_AND_GET_CAMPAIGNS: string;
+  readonly VITE_APP_POST_UNSUSCRIBE_USERS: string;
+  readonly VITE_APP_POST_LOGIN: string;
+  readonly VITE_APP_GET_SUPRESSION_LIST: string;
 }
 
 interface ImportMeta {
