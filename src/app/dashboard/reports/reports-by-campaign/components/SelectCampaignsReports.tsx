@@ -23,8 +23,9 @@ import { ApiResponse, Campaign, CampaignStats } from "../interfaces";
 export const SelectCampaignsReports: React.FC = () => {
   const [selectedCampaign, setSelectedCampaign] = useState<string>("");
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const [selectedCampaignId, setSelectedCampaignId] = useState("");
-  console.log("🚀 ~ selectedCampaignId:", selectedCampaignId);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(
+    null
+  );
   const [additionalData, setAdditionalData] = useState<CampaignStats | null>(
     null
   );
@@ -32,34 +33,24 @@ export const SelectCampaignsReports: React.FC = () => {
 
   const campaignsUrl = import.meta.env.VITE_APP_POST_AND_GET_CAMPAIGNS;
   const baseUrl = import.meta.env.VITE_APP_GET_CAMPAIGNS_ID;
-  const additionalDataUrl = `${baseUrl}/${selectedCampaignId}`;
 
   const {
     data: campaignsData,
     loading: campaignsLoading,
     error: campaignsError,
-    refetch: refetchCampaigns,
   } = useApiGet<ApiResponse<Campaign[]>>({ url: campaignsUrl });
 
-  const {
-    data: additionalApiData,
-    loading: additionalDataLoading,
-    error: additionalDataError,
-    refetch: refetchAdditionalData,
-  } = useApiGet<ApiResponse<CampaignStats>>({ url: additionalDataUrl });
+  const { data: additionalApiData } = useApiGet<ApiResponse<CampaignStats>>({
+    url: selectedCampaignId ? `${baseUrl}/${selectedCampaignId}` : null,
+    skip: !selectedCampaignId,
+  });
 
-  // Update the useEffect for campaigns
   useEffect(() => {
     if (campaignsData && campaignsData.data) {
       setCampaigns(campaignsData.data);
-
-      if (campaignsData.data.length > 0 && !selectedCampaignId) {
-        setSelectedCampaignId(campaignsData.data[0].id);
-      }
     }
-  }, [campaignsData, selectedCampaignId]);
+  }, [campaignsData]);
 
-  // Update the useEffect for additional data
   useEffect(() => {
     if (additionalApiData) {
       setAdditionalData(additionalApiData.data);
@@ -67,18 +58,14 @@ export const SelectCampaignsReports: React.FC = () => {
   }, [additionalApiData]);
 
   const handleChange = (event: SelectChangeEvent) => {
-    setSelectedCampaign(event.target.value as string);
+    const newSelectedCampaignId = event.target.value as string;
+    setSelectedCampaign(newSelectedCampaignId);
+    setSelectedCampaignId(newSelectedCampaignId);
   };
 
-  if (campaignsLoading || additionalDataLoading) return <CircularProgress />;
+  if (campaignsLoading) return <CircularProgress />;
   if (campaignsError)
     return <Typography>Error loading campaigns: {campaignsError}</Typography>;
-  if (additionalDataError)
-    return (
-      <Typography>
-        Error loading additional data: {additionalDataError}
-      </Typography>
-    );
 
   return (
     <Stack
@@ -90,9 +77,21 @@ export const SelectCampaignsReports: React.FC = () => {
         gap: "15px",
       }}
     >
-      <Stack>
-        <Typography>Select Campaign</Typography>
-        <FormControl fullWidth>
+      <Stack sx={{ minWidth: "1100px" }}>
+        <Typography sx={{ marginBottom: "2%" }}>Select Campaign</Typography>
+        <FormControl
+          fullWidth
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "&.Mui-focused fieldset": {
+                borderColor: "#1DD63A",
+              },
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#1DD63A",
+            },
+          }}
+        >
           <InputLabel id="campaign-select-label">Campaign Name</InputLabel>
           <Select
             labelId="campaign-select-label"
@@ -103,67 +102,54 @@ export const SelectCampaignsReports: React.FC = () => {
           >
             {campaigns.map((campaign) => (
               <MenuItem key={campaign.id} value={campaign.id}>
-                {campaign.campaignName}
+                {campaign.name}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
       </Stack>
-      <TableContainer
-        component={Paper}
-        sx={{ bgcolor: "#F9F9F9", width: "1097px", height: "154px" }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ color: "#24244A", fontWeight: 600 }}>
-                Campaign Name
-              </TableCell>
-              <TableCell sx={{ color: "#24244A", fontWeight: 600 }}>
-                State
-              </TableCell>
-              <TableCell sx={{ color: "#24244A", fontWeight: 600 }}>
-                Subject Email
-              </TableCell>
-              <TableCell sx={{ color: "#24244A", fontWeight: 600 }}>
-                List
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          {/* <TableBody>
-            {campaigns.map((campaign) => (
-              <TableRow key={campaign.id}>
-                <TableCell sx={{ color: "#999797" }}>
-                  {campaign.campaignName}
-                </TableCell>
-                <TableCell sx={{ color: "#999797" }}>
-                  {campaign.state}
-                </TableCell>
-                <TableCell sx={{ color: "#999797" }}>
-                  {campaign.subjectEmail}
-                </TableCell>
-                <TableCell sx={{ color: "#999797" }}>{campaign.list}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody> */}
-          createdAt
-        </Table>
-      </TableContainer>
-      <Stack direction="row" spacing={2}>
-        <Button
-          sx={{
-            bgcolor: "#24244A",
-            height: "32px",
-            width: "62px",
-            color: "white",
-          }}
-          onClick={() => {
-            refetchCampaigns();
-            refetchAdditionalData();
-          }}
+
+      {selectedCampaignId && (
+        <TableContainer
+          component={Paper}
+          sx={{ bgcolor: "#F9F9F9", width: "1097px", height: "154px" }}
         >
-          Refresh
-        </Button>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ color: "#24244A", fontWeight: 600 }}>
+                  Campaign Name
+                </TableCell>
+                <TableCell sx={{ color: "#24244A", fontWeight: 600 }}>
+                  State
+                </TableCell>
+                <TableCell sx={{ color: "#24244A", fontWeight: 600 }}>
+                  Subject Email
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {campaigns
+                .filter((campaign) => campaign.id === selectedCampaignId)
+                .map((campaign) => (
+                  <TableRow key={campaign.id}>
+                    <TableCell sx={{ color: "#999797" }}>
+                      {campaign.name}
+                    </TableCell>
+                    <TableCell sx={{ color: "#999797" }}>
+                      {campaign.status}
+                    </TableCell>
+                    <TableCell sx={{ color: "#999797" }}>
+                      {campaign.subject}
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+
+      <Stack direction="row" spacing={2}>
         <Button
           sx={{
             bgcolor: "#24244A",
