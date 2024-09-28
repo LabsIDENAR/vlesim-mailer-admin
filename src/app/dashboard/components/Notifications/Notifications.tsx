@@ -1,10 +1,11 @@
 import {MouseEvent} from "react";
-import {Badge, IconButton, Popover, Stack, Typography} from "@mui/material";
+import {Badge, Button, IconButton, Popover, Stack, Typography} from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import {useState} from "react";
 import {useFetch} from "../../../hooks/useFetch.tsx";
 import {FetchResponseNotification} from "../../notifications/interfaces/fetch-response-notification.interface.ts";
 import {Notification} from "./Notification.tsx";
+import {patchAlerts} from "../../../methods/patchAlerts.ts";
 
 export const Notifications = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -24,6 +25,14 @@ export const Notifications = () => {
     dependencies: [openNotifications],
     timePolling: 5000
   })
+
+  const handleReadNotifications = async () => {
+    if (!data?.data || data.data.length <= 0) return;
+    const idNotifications = data?.data.map((notification) => notification.id);
+    console.log(idNotifications)
+    await patchAlerts(idNotifications)
+    handleCloseNotifications()
+  }
 
   return (
     <>
@@ -59,9 +68,10 @@ export const Notifications = () => {
           {!isLoading && !errorMessage && data?.data && (
             data.data.map((notification) => (
               <Notification key={notification.id} {...notification}
-                            handleCloseNotifications={handleCloseNotifications}/>
+                            handleCloseNotifications={handleCloseNotifications} handleReadNotifications={handleReadNotifications}/>
             ))
           )}
+          <Button onClick={handleReadNotifications} sx={{bgcolor: '#24244A', m: 1, mt: 0}}>Read Notifications</Button>
         </Stack>
       </Popover>
     </>

@@ -7,10 +7,12 @@ import {timeAgo} from "../../../methods/timeAgo.ts";
 
 interface NotificationProps extends NotificationInterface {
   handleCloseNotifications: () => void;
+  handleReadNotifications: () => void;
 }
 
-export function Notification({message, type, campaign, handleCloseNotifications, id, updatedAt}: NotificationProps) {
+export function Notification({message, type, campaign, handleCloseNotifications, id, updatedAt, handleReadNotifications}: NotificationProps) {
   const handleClick = async () => {
+    await handleReadNotifications()
     await patchAlert(id)
     handleCloseNotifications()
     navigate("/dashboard/notifications")
