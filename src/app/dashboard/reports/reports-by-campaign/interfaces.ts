@@ -9,9 +9,22 @@ export interface Campaign {
   to: string[];
 }
 
-export interface GetById {
-  // Define the structure of the data from the second endpoint
-  // For example:
-  // someField: string;
-  // anotherField: number;
+export interface CampaignStats {
+  id: string;
+  totalBounces: number;
+  totalClicks: number;
+  totalComplaints: number;
+  totalDeliveries: number;
+  totalDeliveryDelays: number;
+  totalEmailProcesses: number;
+  totalOpens: number;
+  totalRejections: number;
+  totalRenderingFailures: number;
+  totalSends: number;
+  totalSubscriptions: number;
+  updatedAt: string;
+}
+
+export interface ApiResponse<T> {
+  data: T;
 }

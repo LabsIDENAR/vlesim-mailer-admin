@@ -18,46 +18,51 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useApiGet } from "../../../../hooks/useGetApiCalls";
-import { Campaign, GetById } from "../interfaces";
+import { ApiResponse, Campaign, CampaignStats } from "../interfaces";
 
 export const SelectCampaignsReports: React.FC = () => {
-  const [selectedCampaign, setSelectedCampaign] = useState("");
+  const [selectedCampaign, setSelectedCampaign] = useState<string>("");
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [selectedCampaignId, setSelectedCampaignId] = useState("");
-  const [additionalData, setAdditionalData] = useState<GetById | null>(null);
+  console.log("🚀 ~ selectedCampaignId:", selectedCampaignId);
+  const [additionalData, setAdditionalData] = useState<CampaignStats | null>(
+    null
+  );
+  console.log("🚀 ~ additionalData:", additionalData);
 
-  const additionalDataUrl = import.meta.env.VITE_APP_GET_CAMPAIGNS_ID;
   const campaignsUrl = import.meta.env.VITE_APP_POST_AND_GET_CAMPAIGNS;
+  const baseUrl = import.meta.env.VITE_APP_GET_CAMPAIGNS_ID;
+  const additionalDataUrl = `${baseUrl}/${selectedCampaignId}`;
 
   const {
     data: campaignsData,
     loading: campaignsLoading,
     error: campaignsError,
     refetch: refetchCampaigns,
-  } = useApiGet<Campaign[]>({ url: campaignsUrl });
+  } = useApiGet<ApiResponse<Campaign[]>>({ url: campaignsUrl });
 
   const {
     data: additionalApiData,
     loading: additionalDataLoading,
     error: additionalDataError,
     refetch: refetchAdditionalData,
-  } = useApiGet<GetById>({ url: additionalDataUrl });
+  } = useApiGet<ApiResponse<CampaignStats>>({ url: additionalDataUrl });
 
+  // Update the useEffect for campaigns
   useEffect(() => {
     if (campaignsData && campaignsData.data) {
-      const campaignArray = Object.values(campaignsData.data);
-      console.log("🚀 ~ useEffect ~ campaignArray:", campaignArray);
-      setCampaigns(campaignArray);
+      setCampaigns(campaignsData.data);
 
-      if (campaignArray.length > 0 && !selectedCampaignId) {
-        setSelectedCampaignId(campaignArray[0].id);
+      if (campaignsData.data.length > 0 && !selectedCampaignId) {
+        setSelectedCampaignId(campaignsData.data[0].id);
       }
     }
-  }, [campaignsData]);
+  }, [campaignsData, selectedCampaignId]);
 
+  // Update the useEffect for additional data
   useEffect(() => {
     if (additionalApiData) {
-      setAdditionalData(additionalApiData);
+      setAdditionalData(additionalApiData.data);
     }
   }, [additionalApiData]);
 
@@ -125,7 +130,7 @@ export const SelectCampaignsReports: React.FC = () => {
               </TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          {/* <TableBody>
             {campaigns.map((campaign) => (
               <TableRow key={campaign.id}>
                 <TableCell sx={{ color: "#999797" }}>
@@ -140,15 +145,10 @@ export const SelectCampaignsReports: React.FC = () => {
                 <TableCell sx={{ color: "#999797" }}>{campaign.list}</TableCell>
               </TableRow>
             ))}
-          </TableBody>
+          </TableBody> */}
+          createdAt
         </Table>
       </TableContainer>
-      {additionalData && (
-        <Typography>
-          {/* Display additional data here */}
-          Additional Data: {JSON.stringify(additionalData)}
-        </Typography>
-      )}
       <Stack direction="row" spacing={2}>
         <Button
           sx={{
