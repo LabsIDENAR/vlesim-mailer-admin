@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "../../layout";
 import { Box, CssBaseline, Stack, Typography } from "@mui/material";
 import { SelectCampaignsReports } from "./components/SelectCampaignsReports";
