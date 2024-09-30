@@ -8,10 +8,14 @@ interface UseApiGetResult<T> {
 }
 
 interface UseApiGetProps {
-  url: string;
+  url: string | null;
+  skip?: boolean;
 }
 
-export function useApiGet<T>({ url }: UseApiGetProps): UseApiGetResult<T> {
+export function useApiGet<T>({
+  url,
+  skip = false,
+}: UseApiGetProps): UseApiGetResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,6 +23,10 @@ export function useApiGet<T>({ url }: UseApiGetProps): UseApiGetResult<T> {
   const token = localStorage.getItem("authToken");
 
   const fetchData = useCallback(async () => {
+    if (!url || skip) {
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -45,7 +53,7 @@ export function useApiGet<T>({ url }: UseApiGetProps): UseApiGetResult<T> {
     } finally {
       setLoading(false);
     }
-  }, [url, token]);
+  }, [url, token, skip]);
 
   useEffect(() => {
     fetchData();
