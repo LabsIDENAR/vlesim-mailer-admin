@@ -10,6 +10,8 @@ interface ImportMetaEnv {
   readonly VITE_APP_URI: string;
   readonly VITE_APP_GET_CAMPAIGNS_ID: string;
   readonly VITE_APP_GET_STATISTIC: string;
+  readonly VITE_APP_GET_STATISTIC_TOTAL: string;
+  readonly VITE_APP_URI: string;
 }
 
 interface ImportMeta {
