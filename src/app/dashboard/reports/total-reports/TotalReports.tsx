@@ -1,6 +1,7 @@
 import { Layout } from "../../layout";
 import { Box, CssBaseline, Stack, Typography } from "@mui/material";
-import { EmailsData } from "./components/EmailsData";
+import { EmailsDataTotal } from "./components/EmailsData";
+import { LineChartComponent } from "./components/LineChart";
 
 export const TotalReports = () => {
   return (
@@ -12,7 +13,8 @@ export const TotalReports = () => {
             <Typography variant="h1">Total Report</Typography>
           </Stack>
           <Stack>
-            <EmailsData />
+            <EmailsDataTotal />
+            <LineChartComponent />
           </Stack>
         </Stack>
       </Box>

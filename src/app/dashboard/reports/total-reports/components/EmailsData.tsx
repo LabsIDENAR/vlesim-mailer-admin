@@ -1,14 +1,77 @@
 import React, { useEffect, useState } from "react";
-import { Stack, Box, Typography, CircularProgress } from "@mui/material";
-import { Bounce } from "../../../icons/Bounce";
+import {
+  Stack,
+  Box,
+  Typography,
+  CircularProgress,
+  Divider,
+} from "@mui/material";
+import {
+  Refresh as BounceIcon,
+  AdsClick,
+  Drafts,
+  LocalShipping as DeliveryIcon,
+  RocketLaunch,
+  Report as ComplaintIcon,
+} from "@mui/icons-material";
 import { useApiGet } from "../../../../hooks/useGetApiCalls";
 import { ApiResponse, CampaignStats } from "../interfaces";
 
-export const EmailsData: React.FC = () => {
+interface StatItem {
+  icon: React.ReactNode;
+  label: string;
+  value: number | string;
+}
+
+const StatBox: React.FC<{ stats: StatItem[] }> = ({ stats }) => (
+  <Box
+    sx={{
+      border: "5px dotted #24244A",
+      borderRadius: "4px",
+      padding: "16px",
+      height: "233px",
+      width: "1200px",
+    }}
+  >
+    <Stack
+      spacing={2}
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        gap: "15%",
+        justifyContent: "center",
+        alignItems: "flex-start",
+      }}
+    >
+      {stats.map((stat, index) => (
+        <Stack
+          key={index}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100px",
+          }}
+        >
+          {React.cloneElement(stat.icon as React.ReactElement, {
+            sx: { fontSize: 60, color: "#24244A" },
+          })}
+          <Divider sx={{ width: "100%", my: 1 }} />
+          <Typography align="center">{stat.label}</Typography>
+          <Typography variant="h6" align="center">
+            {stat.value}
+          </Typography>
+        </Stack>
+      ))}
+    </Stack>
+  </Box>
+);
+
+export const EmailsDataTotal: React.FC = () => {
   const [campaignStats, setCampaignStats] = useState<CampaignStats | null>(
     null
   );
-  const baseUrl = import.meta.env.VITE_APP_GET_STATISTIC;
+  const baseUrl = import.meta.env.VITE_APP_GET_STATISTIC_TOTAL;
 
   const {
     data: campaignsData,
@@ -30,101 +93,62 @@ export const EmailsData: React.FC = () => {
       </Typography>
     );
 
-  const statItems = [
-    { icon: <Bounce />, label: "Bounces", value: campaignStats?.totalBounces },
-    { icon: <Bounce />, label: "Clicks", value: campaignStats?.totalClicks },
-    { icon: <Bounce />, label: "Opens", value: campaignStats?.totalOpens },
+  const allStats: StatItem[] = [
     {
-      icon: <Bounce />,
-      label: "Deliveries",
-      value: campaignStats?.totalDeliveries,
+      icon: <BounceIcon />,
+      label: "Bounces",
+      value: campaignStats?.totalBounces || 0,
     },
-    { icon: <Bounce />, label: "Sends", value: campaignStats?.totalSends },
     {
-      icon: <Bounce />,
+      icon: <AdsClick />,
+      label: "Clicks",
+      value: campaignStats?.totalClicks || 0,
+    },
+    { icon: <Drafts />, label: "Opens", value: campaignStats?.totalOpens || 0 },
+    {
+      icon: <DeliveryIcon />,
+      label: "Deliveries",
+      value: campaignStats?.totalDeliveries || 0,
+    },
+    {
+      icon: <RocketLaunch />,
+      label: "Sends",
+      value: campaignStats?.totalSends || 0,
+    },
+    {
+      icon: <ComplaintIcon />,
       label: "Complaints",
-      value: campaignStats?.totalComplaints,
+      value: campaignStats?.totalComplaints || 0,
+    },
+    {
+      icon: <BounceIcon />,
+      label: "Email Processes",
+      value: campaignStats?.totalEmailProcesses || 0,
+    },
+    {
+      icon: <BounceIcon />,
+      label: "Delivery Delays",
+      value: campaignStats?.totalDeliveryDelays || 0,
+    },
+    {
+      icon: <BounceIcon />,
+      label: "Rejections",
+      value: campaignStats?.totalRejections || 0,
+    },
+    {
+      icon: <BounceIcon />,
+      label: "Rendering Failures",
+      value: campaignStats?.totalRenderingFailures || 0,
     },
   ];
 
+  const firstFiveStats = allStats.slice(0, 5);
+  const remainingStats = allStats.slice(5);
+
   return (
     <Stack spacing={2}>
-      <Box
-        sx={{
-          border: "5px dotted #24244A",
-          borderRadius: "4px",
-          padding: "16px",
-          height: "233px",
-        }}
-      >
-        <Stack
-          spacing={2}
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "5%",
-            justifyContent: "space-around",
-          }}
-        >
-          {campaignStats &&
-            statItems.map((item, index) => (
-              <Stack
-                key={index}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                {React.cloneElement(item.icon, {
-                  sx: {
-                    bgcolor: "",
-                    color: "black",
-                    width: "92px",
-                    height: "77px",
-                  },
-                })}
-                <Typography variant="body1">{item.label}</Typography>
-                <Typography variant="h6">{item.value}</Typography>
-              </Stack>
-            ))}
-        </Stack>
-      </Box>
-      <Box
-        sx={{
-          border: "5px dotted #24244A",
-          borderRadius: "4px",
-          padding: "16px",
-          height: "233px",
-        }}
-      >
-        <Stack spacing={2}>
-          <Typography variant="h6">Email Data Content</Typography>
-          {campaignStats && (
-            <>
-              <Typography>
-                Total Email Processes: {campaignStats.totalEmailProcesses}
-              </Typography>
-              <Typography>
-                Total Delivery Delays: {campaignStats.totalDeliveryDelays}
-              </Typography>
-              <Typography>
-                Total Rejections: {campaignStats.totalRejections}
-              </Typography>
-              <Typography>
-                Total Rendering Failures: {campaignStats.totalRenderingFailures}
-              </Typography>
-              <Typography>
-                Total Subscriptions: {campaignStats.totalSubscriptions}
-              </Typography>
-              <Typography>
-                Last Updated:{" "}
-                {new Date(campaignStats.updatedAt).toLocaleString()}
-              </Typography>
-            </>
-          )}
-        </Stack>
-      </Box>
+      <StatBox stats={firstFiveStats} />
+      <StatBox stats={remainingStats} />
     </Stack>
   );
 };
