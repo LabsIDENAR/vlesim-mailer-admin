@@ -34,9 +34,9 @@ jobs:
           VITE_APP_POST_LOGIN: ${{secrets.VITE_APP_POST_LOGIN}}
           VITE_APP_GET_SUPRESSION_LIST: ${{secrets.VITE_APP_GET_SUPRESSION_LIST}}
           VITE_APP_URI: ${{secrets.VITE_APP_URI}}
-          VITE_APP_GET_CAMPAIGNS_ID: ${{secrets.VITE_APP_URI}}
-          VITE_APP_GET_STATISTIC: ${{secrets.VITE_APP_URI}}
-          VITE_APP_GET_STATISTIC_TOTAL: ${{secrets.VITE_APP_URI}}
+          VITE_APP_GET_CAMPAIGNS_ID: ${{secrets.VITE_APP_GET_CAMPAIGNS_ID}}
+          VITE_APP_GET_STATISTIC: ${{secrets.VITE_APP_GET_STATISTIC}}
+          VITE_APP_GET_STATISTIC_TOTAL: ${{secrets.VITE_APP_GET_STATISTIC_TOTAL}}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
