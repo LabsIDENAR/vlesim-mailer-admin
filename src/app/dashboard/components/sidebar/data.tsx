@@ -53,6 +53,6 @@ export const menuItems: MenuItemData[] = [
   {
     title: "Notifications",
     icon: <Notifications />,
-    subItems: [{ title: "Item X", path: "/dashboard/notifications/item-x" }],
+    subItems: [{ title: "History", path: "/dashboard/notifications" }],
   },
 ];
