@@ -17,6 +17,7 @@ export const Layout: React.FC<Props> = ({ children, fullHeight, sx }) => {
         height: fullHeight ? "100%" : "auto",
         px: 2,
         py: 7,
+        pb: 2,
         gap: 2,
         borderRadius: "6px",
         overflowY: "auto",

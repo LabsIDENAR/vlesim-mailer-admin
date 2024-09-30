@@ -16,6 +16,7 @@ import { ReportsByCampaign } from "./app/dashboard/reports/reports-by-campaign/R
 import { TotalReports } from "./app/dashboard/reports/total-reports/TotalReports";
 import { Unsubscribe } from "./app/unsubscribe/Unsuscribe";
 import { SuppressionList } from "./app/dashboard/supressionList/SupressionList";
+import Notification from "./app/dashboard/notifications/Notification.tsx";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
@@ -54,6 +55,10 @@ const App: React.FC = () => {
           <Route
             path="/dashboard/reports/total-reports"
             element={<TotalReports />}
+          />
+          <Route
+            path="/dashboard/notifications"
+            element={<Notification />}
           />
         </Route>
         <Route path="*" element={<Navigate to="/login" replace />} />
