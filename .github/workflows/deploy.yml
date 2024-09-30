@@ -29,6 +29,10 @@ jobs:
         env:
           VITE_APP_LOGIN_EMAIL: ${{ secrets.VITE_APP_LOGIN_EMAIL }}
           VITE_APP_LOGIN_PASSWORD: ${{ secrets.VITE_APP_LOGIN_PASSWORD }}
+          VITE_APP_POST_AND_GET_CAMPAIGNS: ${{secrets.VITE_APP_POST_AND_GET_CAMPAIGNS}}
+          VITE_APP_POST_UNSUSCRIBE_USERS: ${{secrets.VITE_APP_POST_UNSUSCRIBE_USERS}}
+          VITE_APP_POST_LOGIN: ${{secrets.VITE_APP_POST_LOGIN}}
+          VITE_APP_GET_SUPRESSION_LIST: ${{secrets.VITE_APP_GET_SUPRESSION_LIST}}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -44,3 +48,4 @@ jobs:
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+

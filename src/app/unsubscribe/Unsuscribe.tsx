@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   Stack,
@@ -12,9 +12,18 @@ import {
 
 export const Unsubscribe = () => {
   const [open, setOpen] = useState(false);
-  const token = localStorage.getItem("authToken");
+  const [token, setToken] = useState("");
 
   const endpointPost = import.meta.env.VITE_APP_POST_UNSUSCRIBE_USERS;
+
+  useEffect(() => {
+    // Get the token from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenFromUrl = urlParams.get("token");
+    if (tokenFromUrl) {
+      setToken(tokenFromUrl);
+    }
+  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -65,7 +74,7 @@ export const Unsubscribe = () => {
         Unsubscribe
       </Button>
 
-      {/* Dialogo de confirmación */}
+      {/* Confirmation Dialog */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{"Unsubscribe Confirmation"}</DialogTitle>
         <DialogContent>

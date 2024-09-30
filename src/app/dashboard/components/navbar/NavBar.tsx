@@ -92,7 +92,7 @@ const NavBar = () => {
       >
         <Box sx={{padding: 2}}>
           <Button variant="contained" color="error" onClick={handleLogout}>
-            Cerrar Sesión
+            Log Out
           </Button>
         </Box>
       </Popover>
