@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Box,
@@ -15,20 +15,21 @@ import {
   TableRow,
   Paper,
   CircularProgress,
-} from "@mui/material";
-import { Layout } from "../layout";
-import SearchIcon from "@mui/icons-material/Search";
-import { ApiResponse, SuppressionListItem } from "./interfaces";
+} from '@mui/material';
+import { Layout } from '../layout';
+import SearchIcon from '@mui/icons-material/Search';
+import { ApiResponse, SuppressionListItem } from './interfaces';
 
 export const SuppressionList: React.FC = () => {
   const [list, setList] = useState<SuppressionListItem[]>([]);
   const [filteredList, setFilteredList] = useState<SuppressionListItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
+  const urlParams = new URLSearchParams({ isSubscribed: 'false' });
   const endpoint = import.meta.env.VITE_APP_GET_SUPRESSION_LIST;
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem('authToken');
 
   useEffect(() => {
     fetchList();
@@ -45,24 +46,24 @@ export const SuppressionList: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(endpoint, {
-        method: "GET",
+      const response = await fetch(`${endpoint}?${urlParams.toString()}`, {
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           ...(token && { Authorization: `Bearer ${token}` }),
         },
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch suppression list");
+        throw new Error('Failed to fetch suppression list');
       }
 
       const data: ApiResponse = await response.json();
       setList(data.data);
       setFilteredList(data.data);
     } catch (error) {
-      console.error("Error fetching list:", error);
-      setError("Failed to load suppression list. Please try again later.");
+      console.error('Error fetching list:', error);
+      setError('Failed to load suppression list. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -74,7 +75,7 @@ export const SuppressionList: React.FC = () => {
 
   return (
     <Layout>
-      <Box sx={{ maxWidth: "1600px", margin: "0 auto" }}>
+      <Box sx={{ maxWidth: '1600px', margin: '0 auto' }}>
         <CssBaseline />
         <Stack spacing={4}>
           <Stack spacing={2}>
@@ -108,14 +109,14 @@ export const SuppressionList: React.FC = () => {
                 ),
               }}
               sx={{
-                width: "300px",
-                "& .MuiOutlinedInput-root": {
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#1DD63A",
+                width: '300px',
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#1DD63A',
                   },
                 },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#1DD63A",
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: '#1DD63A',
                 },
               }}
             />
@@ -138,7 +139,7 @@ export const SuppressionList: React.FC = () => {
                   {filteredList.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>{item.email}</TableCell>
-                      <TableCell>{item.isSubscribed ? "Yes" : "No"}</TableCell>
+                      <TableCell>{item.isSubscribed ? 'Yes' : 'No'}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
