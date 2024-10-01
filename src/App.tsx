@@ -19,17 +19,12 @@ import { SuppressionList } from "./app/dashboard/supressionList/SupressionList";
 import Notification from "./app/dashboard/notifications/Notification.tsx";
 
 const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-
   return (
     <Router>
       <Routes>
-        <Route
-          path="/login"
-          element={<Login setIsAuthenticated={setIsAuthenticated} />}
-        />
+        <Route path="/login" element={<Login />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
-        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
+        <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/campaign" element={<Campaign />} />
           <Route
@@ -56,10 +51,7 @@ const App: React.FC = () => {
             path="/dashboard/reports/total-reports"
             element={<TotalReports />}
           />
-          <Route
-            path="/dashboard/notifications"
-            element={<Notification />}
-          />
+          <Route path="/dashboard/notifications" element={<Notification />} />
         </Route>
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

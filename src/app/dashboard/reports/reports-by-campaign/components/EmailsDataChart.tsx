@@ -22,7 +22,7 @@ export const EmailsDataChart: React.FC<EmailsDataChartProps> = ({
   campaignStats,
 }) => {
   if (!selectedCampaign || !campaignStats) {
-    return <Typography>Please select a campaign to view the chart.</Typography>;
+    return;
   }
 
   const data = [

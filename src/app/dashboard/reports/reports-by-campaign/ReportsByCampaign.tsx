@@ -11,9 +11,11 @@ export const ReportsByCampaign = () => {
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(
     null
   );
+  console.log("🚀 ~ ReportsByCampaign ~ selectedCampaign:", selectedCampaign);
   const [campaignStats, setCampaignStats] = useState<CampaignStats | null>(
     null
   );
+  console.log("🚀 ~ ReportsByCampaign ~ campaignStats:", campaignStats);
 
   const campaignsUrl = import.meta.env.VITE_APP_POST_AND_GET_CAMPAIGNS;
   const baseUrl = import.meta.env.VITE_APP_GET_CAMPAIGNS_ID;
