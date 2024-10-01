@@ -20,8 +20,7 @@ interface ChartData {
 
 export const LineChartComponent: React.FC = () => {
   const [chartData, setChartData] = useState<ChartData[]>([]);
-  console.log("🚀 ~ chartData:", chartData);
-  const baseUrl = import.meta.env.VITE_APP_GET_STATISTIC;
+  const baseUrl = import.meta.env.VITE_APP_GET_STATISTIC_TOTAL;
 
   const {
     data: statsData,

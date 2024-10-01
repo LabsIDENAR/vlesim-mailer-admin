@@ -121,30 +121,79 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
   };
 
   const handleEditSubmit = async () => {
-    if (editedCampaign && selectedCampaign) {
-      try {
-        const response = await fetch(`${endpoint}/${selectedCampaign.id}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-          body: JSON.stringify(editedCampaign),
-        });
+    if (!editedCampaign || !selectedCampaign) {
+      setSnackbar({
+        open: true,
+        message: "No campaign selected for editing.",
+        severity: "error",
+      });
+      return;
+    }
 
-        if (!response.ok) {
-          throw new Error("Failed to update campaign");
-        }
-        setCampaigns(
-          campaigns.map((c) =>
-            c.id === selectedCampaign.id ? editedCampaign : c
-          )
-        );
-        handleEditDialogClose();
-      } catch (error) {
-        console.error("Error updating campaign:", error);
-        setError("Failed to update campaign. Please try again later.");
+    try {
+      // Create a copy of editedCampaign to modify
+      const campaignToUpdate = { ...editedCampaign };
+
+      // Ensure attachments are always an array
+      if (typeof campaignToUpdate.attachments === "string") {
+        campaignToUpdate.attachments = (campaignToUpdate.attachments as string)
+          .split(",")
+          .map((item) => item.trim())
+          .filter((item) => item !== ""); // Remove empty items
       }
+
+      // Validate required fields
+      const requiredFields = ["name", "date", "subject", "to", "body"];
+      for (const field of requiredFields) {
+        if (!campaignToUpdate[field as keyof Campaign]) {
+          throw new Error(`${field} is required.`);
+        }
+      }
+
+      const response = await fetch(`${endpoint}/${selectedCampaign.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify(campaignToUpdate),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      // Instead of using the server response, use the locally edited data
+      // Update the campaigns state with the edited campaign
+      setCampaigns(
+        campaigns.map((c) =>
+          c.id === selectedCampaign.id ? campaignToUpdate : c
+        )
+      );
+
+      setSnackbar({
+        open: true,
+        message: "Campaign updated successfully",
+        severity: "success",
+      });
+
+      handleEditDialogClose();
+    } catch (error) {
+      console.error("Error updating campaign:", error);
+
+      let errorMessage = "Failed to update campaign. Please try again later.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      setSnackbar({
+        open: true,
+        message: errorMessage,
+        severity: "error",
+      });
     }
   };
 
@@ -162,8 +211,6 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
         if (!response.ok) {
           throw new Error("Failed to delete campaign");
         }
-
-        // Update the local state
         setCampaigns(campaigns.filter((c) => c.id !== selectedCampaign.id));
         handleDeleteDialogClose();
       } catch (error) {
@@ -173,49 +220,37 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
     }
   };
 
-  const handleSendEmail = async () => {
-    if (selectedCampaign) {
-      try {
-        const response = await fetch(
-          `${endpoint}/${selectedCampaign.id}/launch`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              ...(token && { Authorization: `Bearer ${token}` }),
-            },
-          }
+  const handleSendEmail = async (campaign: Campaign) => {
+    try {
+      const response = await fetch(`${endpoint}/${campaign.id}/launch`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      });
+      if (!response.ok) {
+        throw new Error(
+          `Failed to send campaign: ${response.status} ${response.statusText}`
         );
-        if (!response.ok) {
-          throw new Error(
-            `Failed to send campaign: ${response.status} ${response.statusText}`
-          );
-        }
-        const responseData = await response.json();
-        console.log("Response data:", responseData);
-
-        setSnackbar({
-          open: true,
-          message: "Campaign sent successfully",
-          severity: "success",
-        });
-      } catch (error) {
-        console.error("Error sending campaign:", error);
-        setSnackbar({
-          open: true,
-          message: `Failed to send campaign: ${
-            error instanceof Error ? error.message : "Unknown error"
-          }`,
-          severity: "error",
-        });
       }
-    } else {
-      console.error("No campaign selected");
-      // setSnackbar({
-      //   open: true,
-      //   message: "No campaign selected",
-      //   severity: "error",
-      // });
+      const responseData = await response.json();
+      console.log("Response data:", responseData);
+
+      setSnackbar({
+        open: true,
+        message: "Campaign sent successfully",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Error sending campaign:", error);
+      setSnackbar({
+        open: true,
+        message: `Failed to send campaign: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
+        severity: "error",
+      });
     }
   };
 
@@ -242,6 +277,8 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
   }
 
   const renderEditField = (key: keyof Campaign, value: string | string[]) => {
+    const isReadOnly = key === "id" || key === "status";
+
     if (key === "to" && Array.isArray(value)) {
       return (
         <TextField
@@ -252,6 +289,19 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
           value={value.join(", ")}
           onChange={(e) => handleEditChange(key, e.target.value.split(", "))}
           helperText="Separate multiple email addresses with commas"
+          InputProps={{
+            readOnly: isReadOnly,
+          }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "&.Mui-focused fieldset": {
+                borderColor: "#1DD63A",
+              },
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#1DD63A",
+            },
+          }}
         />
       );
     }
@@ -263,14 +313,17 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
         label={key}
         value={value as string}
         onChange={(e) => handleEditChange(key, e.target.value)}
+        InputProps={{
+          readOnly: isReadOnly,
+        }}
         sx={{
           "& .MuiOutlinedInput-root": {
             "&.Mui-focused fieldset": {
-              borderColor: "#1DD63A", // Color del borde cuando está enfocado
+              borderColor: "#1DD63A",
             },
           },
           "& .MuiInputLabel-root.Mui-focused": {
-            color: "#1DD63A", // Color de la etiqueta cuando está enfocada
+            color: "#1DD63A",
           },
         }}
       />
@@ -336,16 +389,7 @@ const CampaignHistory: React.FC<CampaignHistoryProps> = ({ campaignsInfo }) => {
                       <IconButton onClick={() => handleDeleteClick(campaign)}>
                         <Delete size={20} />
                       </IconButton>
-                      <IconButton
-                        onClick={() => {
-                          console.log(
-                            "Send email button clicked for campaign:",
-                            campaign
-                          ); // Debug log
-                          setSelectedCampaign(campaign);
-                          handleSendEmail();
-                        }}
-                      >
+                      <IconButton onClick={() => handleSendEmail(campaign)}>
                         <CirclePlay size={20} />
                       </IconButton>
                     </TableCell>

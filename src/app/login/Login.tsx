@@ -9,19 +9,19 @@ import {
   CssBaseline,
   Card,
   CardContent,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const theme = createTheme();
 
-interface LoginProps {
-  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
+export const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -41,13 +41,10 @@ export const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("🚀 ~ handleSubmit ~ data:", data);
         const token = data.data.accessToken;
-
-        // Guardar el token en localStorage
-        localStorage.setItem("authToken", token);
-
-        setIsAuthenticated(true);
-        navigate("/dashboard");
+        localStorage.setItem("authToken", token); // Store the token
+        navigate("/dashboard"); // Navigate after storing the token
       } else {
         setError("Invalid email or password");
       }
@@ -55,6 +52,10 @@ export const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
       console.error("Error:", err);
       setError("An error occurred. Please try again later.");
     }
+  };
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
   };
 
   return (
@@ -111,11 +112,24 @@ export const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
                     fullWidth
                     name="password"
                     label="Password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleTogglePasswordVisibility}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                   {error && (
                     <Typography variant="body2" color="error" align="center">
