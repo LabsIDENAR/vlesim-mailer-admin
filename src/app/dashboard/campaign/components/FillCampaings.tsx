@@ -24,6 +24,15 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
+  const clearFields = () => {
+    setSelectedDate(null);
+    setSubject("");
+    setCampaignName("");
+    setBody("");
+    setDescription("");
+    setEmailsList([]);
+  };
+
   const handleAddCampaign = async () => {
     const endpointPost = import.meta.env.VITE_APP_POST_AND_GET_CAMPAIGNS;
     if (!selectedDate || !subject || !campaignName || !body || !description) {
@@ -50,15 +59,14 @@ const FillCampaigns: React.FC<FillCampaignsProps> = ({ addCampaign }) => {
         },
         body: JSON.stringify(newCampaign),
       });
-      console.log("🚀 ~ handleAddCampaign ~ response:", response);
 
       if (!response.ok) {
         throw new Error("Something went wrong with the request.");
       }
 
       const data = await response.json();
-      console.log("Campaign created successfully:", data);
-
+      addCampaign(data.data);
+      clearFields();
       addCampaign(data.data);
     } catch (error) {
       console.error("Error creating campaign:", error);

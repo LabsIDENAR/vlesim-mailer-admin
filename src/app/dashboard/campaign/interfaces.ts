@@ -24,5 +24,7 @@ export interface Campaign {
   date: string;
   description: string;
   subject: string;
+  status: string;
+  attachments: string[];
   to: string[];
 }

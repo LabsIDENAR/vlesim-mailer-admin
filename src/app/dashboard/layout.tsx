@@ -21,7 +21,7 @@ export const Layout: React.FC<Props> = ({ children, fullHeight, sx }) => {
         gap: 2,
         borderRadius: "6px",
         overflowY: "auto",
-        display: "flex", // Set the layout to flex
+        display: "flex",
         ...sx,
         bgcolor: theme.palette.primary.main,
       }}
@@ -31,8 +31,8 @@ export const Layout: React.FC<Props> = ({ children, fullHeight, sx }) => {
       <Sidebar />
       <Stack
         sx={{
-          marginLeft: "276px", // Shifts content to the right, respecting sidebar width
-          width: "calc(100% - 276px)", // Uses the remaining space
+          marginLeft: "276px",
+          width: "calc(100% - 276px)",
           alignItems: "center",
         }}
       >

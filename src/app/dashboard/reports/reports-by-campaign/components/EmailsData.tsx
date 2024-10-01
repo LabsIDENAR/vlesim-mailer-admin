@@ -73,7 +73,11 @@ export const EmailsData: React.FC<EmailsDataProps> = ({
   campaignStats,
 }) => {
   if (!selectedCampaign || !campaignStats) {
-    return <Typography>Please select a campaign to view its data.</Typography>;
+    return (
+      <Typography>
+        Please select a campaign to view its data and its chart.
+      </Typography>
+    );
   }
 
   const allStats: StatItem[] = [
